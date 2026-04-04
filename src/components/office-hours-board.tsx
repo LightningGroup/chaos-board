@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useEffectEvent, useState, useTransition } from "react";
+import { FormEvent, useEffect, useEffectEvent, useLayoutEffect, useRef, useState, useTransition } from "react";
 
 type Side = "blue" | "red";
 
@@ -16,6 +16,8 @@ type ChatMessage = {
 const MAX_MESSAGES = 28;
 const LIVE_MESSAGE_INTERVAL_MS = 4500;
 const REPLY_DELAY_MS = 1400;
+const LAYOUT_SHIFT_DURATION_MS = 720;
+const LAYOUT_SHIFT_EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
 
 const sideMeta: Record<
   Side,
@@ -146,11 +148,41 @@ function appendMessage(messages: ChatMessage[], nextMessage: ChatMessage) {
   return [...messages, nextMessage].slice(-MAX_MESSAGES);
 }
 
+function collectRenderedMessages(containers: Partial<Record<Side, HTMLDivElement | null>>) {
+  const nodes = new Map<number, HTMLElement>();
+  const positions = new Map<number, number>();
+
+  (["blue", "red"] as const).forEach((side) => {
+    const container = containers[side];
+
+    if (!container) {
+      return;
+    }
+
+    container.querySelectorAll<HTMLElement>("[data-message-id]").forEach((element) => {
+      const rawId = element.dataset.messageId;
+
+      if (!rawId) {
+        return;
+      }
+
+      const id = Number(rawId);
+
+      nodes.set(id, element);
+      positions.set(id, element.getBoundingClientRect().top);
+    });
+  });
+
+  return { nodes, positions };
+}
+
 export default function OfficeHoursBoard() {
   const [selectedSide, setSelectedSide] = useState<Side>("blue");
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [isPending, startTransition] = useTransition();
+  const listRefs = useRef<Partial<Record<Side, HTMLDivElement | null>>>({});
+  const previousMessagePositionsRef = useRef<Map<number, number>>(new Map());
 
   const blueMessages = messages.filter((message) => message.side === "blue");
   const redMessages = messages.filter((message) => message.side === "red");
@@ -161,6 +193,41 @@ export default function OfficeHoursBoard() {
   const totalVotes = blueVotes + redVotes;
   const bluePercent = Math.round((blueVotes / totalVotes) * 1000) / 10;
   const redPercent = Math.round((redVotes / totalVotes) * 1000) / 10;
+
+  useLayoutEffect(() => {
+    const { nodes, positions } = collectRenderedMessages(listRefs.current);
+
+    positions.forEach((currentTop, id) => {
+      const previousTop = previousMessagePositionsRef.current.get(id);
+
+      if (previousTop === undefined) {
+        return;
+      }
+
+      const deltaY = previousTop - currentTop;
+
+      if (Math.abs(deltaY) < 1) {
+        return;
+      }
+
+      const node = nodes.get(id);
+
+      if (!node) {
+        return;
+      }
+
+      node.getAnimations().forEach((animation) => {
+        animation.cancel();
+      });
+
+      node.animate([{ transform: `translateY(${deltaY}px)` }, { transform: "translateY(0)" }], {
+        duration: LAYOUT_SHIFT_DURATION_MS,
+        easing: LAYOUT_SHIFT_EASING,
+      });
+    });
+
+    previousMessagePositionsRef.current = positions;
+  }, [messages]);
 
   function pushMessage({
     author,
@@ -243,8 +310,8 @@ export default function OfficeHoursBoard() {
       <div className="mx-auto flex w-full max-w-[1040px] flex-col gap-3 md:gap-4">
         <section className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/72 p-4 shadow-[0_24px_80px_rgba(15,23,42,0.14)] backdrop-blur-xl md:p-5">
           <div className="absolute inset-x-0 top-0 flex h-1.5 overflow-hidden">
-            <div className="bg-blue-500 transition-[width] duration-500" style={{ width: `${bluePercent}%` }} />
-            <div className="bg-red-500 transition-[width] duration-500" style={{ width: `${redPercent}%` }} />
+            <div className="motion-width bg-blue-500" style={{ width: `${bluePercent}%` }} />
+            <div className="motion-width bg-red-500" style={{ width: `${redPercent}%` }} />
           </div>
           <div className="absolute -left-16 top-20 h-40 w-40 rounded-full bg-[rgba(21,94,239,0.12)] blur-3xl" />
           <div className="absolute -right-16 bottom-0 h-48 w-48 rounded-full bg-[rgba(240,68,56,0.14)] blur-3xl" />
@@ -263,24 +330,28 @@ export default function OfficeHoursBoard() {
 
               <div className="flex flex-wrap gap-3">
                 <div className="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-700 md:text-sm">
-                  LIVE 댓글 {messages.length}개
+                  LIVE 댓글{" "}
+                  <span key={`live-count-${messages.length}`} className="motion-stat-swap inline-block tabular-nums">
+                    {messages.length}개
+                  </span>
                 </div>
                 <div className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-slate-700 md:text-sm">
-                  참여 {totalVotes}건
+                  참여{" "}
+                  <span key={`total-count-${totalVotes}`} className="motion-stat-swap inline-block tabular-nums">
+                    {totalVotes}건
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="grid gap-3 xl:grid-cols-[1.25fr_0.75fr]">
               <div className="overflow-hidden rounded-[1.75rem] border border-slate-900 bg-slate-950 text-white xl:flex xl:h-full xl:flex-col">
-                <div
-                  className="grid gap-px bg-white/10 xl:min-h-0 xl:flex-1"
-                  style={{ gridTemplateColumns: `${bluePercent}% ${redPercent}%` }}
-                >
+                <div className="flex gap-px bg-white/10 xl:min-h-0 xl:flex-1">
                   <button
                     type="button"
                     onClick={() => handleVote("blue")}
-                    className={`relative min-h-[128px] overflow-hidden px-4 py-4 text-left transition hover:bg-white/5 xl:h-full ${
+                    style={{ width: `${bluePercent}%` }}
+                    className={`motion-width relative min-h-[128px] shrink-0 overflow-hidden px-4 py-4 text-left transition-[transform,filter,box-shadow,background-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.992] xl:h-full ${
                       selectedSide === "blue" ? "ring-2 ring-inset ring-blue-300" : ""
                     }`}
                   >
@@ -289,17 +360,26 @@ export default function OfficeHoursBoard() {
                       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-100 md:text-sm">
                         찬성
                       </p>
-                      <p className="mt-2.5 text-[2.3rem] font-black tracking-tight md:text-[2.7rem]">
+                      <p
+                        key={`blue-percent-${bluePercent}`}
+                        className="motion-stat-swap mt-2.5 text-[2.3rem] font-black tracking-tight md:text-[2.7rem]"
+                      >
                         {bluePercent}%
                       </p>
-                      <p className="mt-1.5 text-xs text-blue-100 md:text-sm">댓글 {blueVotes}개</p>
+                      <p
+                        key={`blue-votes-${blueVotes}`}
+                        className="motion-stat-swap mt-1.5 text-xs text-blue-100 md:text-sm"
+                      >
+                        댓글 {blueVotes}개
+                      </p>
                     </div>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => handleVote("red")}
-                    className={`relative min-h-[128px] overflow-hidden px-4 py-4 text-left transition hover:bg-white/5 xl:h-full ${
+                    style={{ width: `${redPercent}%` }}
+                    className={`motion-width relative min-h-[128px] shrink-0 overflow-hidden px-4 py-4 text-left transition-[transform,filter,box-shadow,background-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.992] xl:h-full ${
                       selectedSide === "red" ? "ring-2 ring-inset ring-red-200" : ""
                     }`}
                   >
@@ -308,17 +388,25 @@ export default function OfficeHoursBoard() {
                       <p className="text-xs font-semibold uppercase tracking-[0.28em] text-red-50 md:text-sm">
                         반대
                       </p>
-                      <p className="mt-2.5 text-[2.3rem] font-black tracking-tight md:text-[2.7rem]">
+                      <p
+                        key={`red-percent-${redPercent}`}
+                        className="motion-stat-swap mt-2.5 text-[2.3rem] font-black tracking-tight md:text-[2.7rem]"
+                      >
                         {redPercent}%
                       </p>
-                      <p className="mt-1.5 text-xs text-red-100 md:text-sm">댓글 {redVotes}개</p>
+                      <p
+                        key={`red-votes-${redVotes}`}
+                        className="motion-stat-swap mt-1.5 text-xs text-red-100 md:text-sm"
+                      >
+                        댓글 {redVotes}개
+                      </p>
                     </div>
                   </button>
                 </div>
 
                 <div className="flex h-3 w-full bg-white/10">
-                  <div className="bg-blue-500 transition-[width] duration-500" style={{ width: `${bluePercent}%` }} />
-                  <div className="bg-red-500 transition-[width] duration-500" style={{ width: `${redPercent}%` }} />
+                  <div className="motion-width bg-blue-500" style={{ width: `${bluePercent}%` }} />
+                  <div className="motion-width bg-red-500" style={{ width: `${redPercent}%` }} />
                 </div>
               </div>
 
@@ -375,11 +463,17 @@ export default function OfficeHoursBoard() {
                     </span>
                   </header>
 
-                  <div className="flex h-[258px] flex-col gap-2 overflow-y-auto p-3 md:h-[280px]">
+                  <div
+                    ref={(node) => {
+                      listRefs.current[side] = node;
+                    }}
+                    className="flex h-[258px] flex-col gap-2 overflow-y-auto p-3 md:h-[280px]"
+                  >
                     {sideMessages.map((message) => (
                       <article
                         key={message.id}
-                        className={`w-full rounded-[1.4rem] border border-black/5 p-3 shadow-[0_10px_30px_rgba(15,23,42,0.06)] ${
+                        data-message-id={message.id}
+                        className={`motion-comment-enter w-full rounded-[1.4rem] border border-black/5 p-3 transition-[transform,box-shadow,background-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_16px_38px_rgba(15,23,42,0.08)] ${
                           message.isLocal ? meta.localBubbleBackground : meta.bubbleBackground
                         }`}
                       >
@@ -428,7 +522,7 @@ export default function OfficeHoursBoard() {
                       key={side}
                       type="button"
                       onClick={() => setSelectedSide(side)}
-                      className={`rounded-full px-4 py-2 text-xs font-semibold transition md:text-sm ${
+                      className={`rounded-full px-4 py-2 text-xs font-semibold transition-[transform,background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] md:text-sm ${
                         isActive
                           ? "bg-white text-slate-950"
                           : "border border-white/15 bg-white/5 text-slate-300 hover:bg-white/10"
@@ -451,7 +545,7 @@ export default function OfficeHoursBoard() {
               <button
                 type="submit"
                 disabled={isPending || draft.trim().length === 0}
-                className={`h-12 rounded-full px-5 text-[14px] font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-50 ${sideMeta[selectedSide].actionBackground}`}
+                className={`h-12 rounded-full px-5 text-[14px] font-bold text-white transition-[transform,background-color,box-shadow,opacity] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(37,99,255,0.32)] active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-50 ${sideMeta[selectedSide].actionBackground}`}
               >
                 의견 보내기
               </button>

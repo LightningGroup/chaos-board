@@ -5,6 +5,10 @@
   --foreground: #0f172a;
   --blue: #155eef;
   --red: #f04438;
+  --motion-fast: 220ms;
+  --motion-base: 720ms;
+  --motion-slow: 960ms;
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -44,6 +48,57 @@ button {
 
 button:disabled {
   cursor: not-allowed;
+}
+
+@keyframes comment-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.985);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes stat-swap {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.motion-comment-enter {
+  animation: comment-enter var(--motion-base) var(--ease-smooth);
+  will-change: transform, opacity;
+}
+
+.motion-stat-swap {
+  animation: stat-swap var(--motion-fast) var(--ease-smooth);
+  will-change: transform, opacity, filter;
+}
+
+.motion-width {
+  transition: width var(--motion-base) var(--ease-smooth);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-comment-enter,
+  .motion-stat-swap {
+    animation: none;
+  }
+
+  .motion-width {
+    transition-duration: 1ms;
+  }
 }
 
 ::selection {
