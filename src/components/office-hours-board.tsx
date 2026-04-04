@@ -234,13 +234,10 @@ export default function OfficeHoursBoard() {
           <div className="relative flex flex-col gap-6">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-3xl">
-                <p className="text-xs font-black uppercase tracking-[0.35em] text-slate-500">
-                  Office Hours Live Board
-                </p>
-                <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-950 md:text-5xl">
+                <h1 className="text-3xl font-black tracking-tight text-slate-950 md:text-5xl">
                   주 4일제 도입, 지금 시작해야 하는가?
                 </h1>
-                <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 md:text-base">
+                <p className="mt-3 max-w-4xl text-sm leading-6 text-slate-600 md:text-base">
                   위에서는 찬반 투표를 빠르게 집계하고, 아래에서는 두 진영이 실시간으로 의견을
                   주고받는 토론 게시판입니다.
                 </p>
@@ -256,13 +253,16 @@ export default function OfficeHoursBoard() {
               </div>
             </div>
 
-            <div className="grid gap-4 xl:grid-cols-[1.25fr_0.75fr]">
-              <div className="overflow-hidden rounded-[1.75rem] border border-slate-900 bg-slate-950 text-white">
-                <div className="grid gap-px bg-white/10 md:grid-cols-2">
+            <div className="grid gap-4 xl:grid-cols-[1.25fr_0.75fr] xl:gap-3">
+              <div className="overflow-hidden rounded-[1.75rem] border border-slate-900 bg-slate-950 text-white xl:flex xl:h-full xl:flex-col">
+                <div
+                  className="grid gap-px bg-white/10 xl:min-h-0 xl:flex-1"
+                  style={{ gridTemplateColumns: `${bluePercent}% ${redPercent}%` }}
+                >
                   <button
                     type="button"
                     onClick={() => handleVote("blue")}
-                    className={`relative overflow-hidden px-6 py-7 text-left transition hover:bg-white/5 ${
+                    className={`relative min-h-[168px] overflow-hidden px-6 py-7 text-left transition hover:bg-white/5 xl:h-full ${
                       selectedSide === "blue" ? "ring-2 ring-inset ring-blue-300" : ""
                     }`}
                   >
@@ -279,7 +279,7 @@ export default function OfficeHoursBoard() {
                   <button
                     type="button"
                     onClick={() => handleVote("red")}
-                    className={`relative overflow-hidden px-6 py-7 text-left transition hover:bg-white/5 ${
+                    className={`relative min-h-[168px] overflow-hidden px-6 py-7 text-left transition hover:bg-white/5 xl:h-full ${
                       selectedSide === "red" ? "ring-2 ring-inset ring-red-200" : ""
                     }`}
                   >
@@ -300,24 +300,24 @@ export default function OfficeHoursBoard() {
                 </div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-                <article className="rounded-[1.5rem] border border-blue-200 bg-[rgba(21,94,239,0.1)] p-5">
+              <div className="grid gap-4 sm:grid-cols-2 xl:flex xl:h-[236px] xl:flex-col xl:gap-3">
+                <article className="flex min-h-[164px] flex-col justify-center rounded-[1.5rem] border border-blue-200 bg-[rgba(21,94,239,0.1)] p-6 xl:min-h-0 xl:flex-1 xl:p-4">
                   <p className="text-xs font-black uppercase tracking-[0.28em] text-blue-700">찬성 핵심</p>
-                  <h2 className="mt-3 text-xl font-black text-slate-950">
+                  <h2 className="mt-3 text-xl font-black text-slate-950 xl:mt-2 xl:text-lg">
                     근무 시간을 줄여도 성과는 떨어지지 않을 수 있다
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-slate-700">
+                  <p className="mt-2 text-sm leading-6 text-slate-700 xl:mt-1.5 xl:text-[13px] xl:leading-5">
                     회의와 보고 체계를 줄이고 집중 근무를 설계하면 생산성과 채용 매력도를 같이
                     끌어올릴 수 있다는 주장입니다.
                   </p>
                 </article>
 
-                <article className="rounded-[1.5rem] border border-red-200 bg-[rgba(240,68,56,0.1)] p-5">
+                <article className="flex min-h-[164px] flex-col justify-center rounded-[1.5rem] border border-red-200 bg-[rgba(240,68,56,0.1)] p-6 xl:min-h-0 xl:flex-1 xl:p-4">
                   <p className="text-xs font-black uppercase tracking-[0.28em] text-red-700">반대 핵심</p>
-                  <h2 className="mt-3 text-xl font-black text-slate-950">
+                  <h2 className="mt-3 text-xl font-black text-slate-950 xl:mt-2 xl:text-lg">
                     제도보다 운영 현실과 형평성 문제가 먼저다
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-slate-700">
+                  <p className="mt-2 text-sm leading-6 text-slate-700 xl:mt-1.5 xl:text-[13px] xl:leading-5">
                     고객 응대와 현장 운영 조직은 같은 조건을 적용하기 어렵기 때문에 비용과 업무
                     공백 대책이 선행돼야 한다는 주장입니다.
                   </p>
