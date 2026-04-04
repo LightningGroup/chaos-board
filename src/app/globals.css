@@ -1,19 +1,44 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4efe8;
+  --foreground: #0f172a;
+  --blue: #155eef;
+  --red: #f04438;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
 }
 
 body {
+  min-height: 100vh;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-image:
+    radial-gradient(circle at top left, rgba(21, 94, 239, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(240, 68, 56, 0.18), transparent 30%),
+    linear-gradient(180deg, #fbf8f3 0%, #ecf2ff 100%);
+  font-family:
+    "SUIT Variable",
+    "Pretendard Variable",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    system-ui,
+    sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(21, 94, 239, 0.18);
+  color: #0f172a;
 }
