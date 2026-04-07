@@ -21,7 +21,7 @@ import {
 const INCOMING_MESSAGE_INTERVAL_MS = 4500;
 const REPLY_DELAY_MS = 1400;
 const FEED_HEIGHT_CLASS = "h-[420px] md:h-[520px]";
-const FEATURED_COLUMN_HEIGHT_CLASS = "xl:h-[212px]";
+const FEATURED_COLUMN_HEIGHT_CLASS = "xl:h-full";
 const EMPTY_AUTHOR_TOKEN = "?";
 const ZERO_COUNT = 0;
 
@@ -88,6 +88,22 @@ function getRefreshButtonLabel() {
   return "댓글 새로고침";
 }
 
+function getOverviewButtonClass({
+  side,
+}: {
+  side: Side;
+}) {
+  if (side === "blue") {
+    return "border-blue-200 bg-[rgba(21,94,239,0.08)] text-slate-950 shadow-[0_10px_30px_rgba(21,94,239,0.08)]";
+  }
+
+  if (side === "red") {
+    return "border-red-200 bg-[rgba(240,68,56,0.08)] text-slate-950 shadow-[0_10px_30px_rgba(240,68,56,0.08)]";
+  }
+
+  return "border-slate-200 bg-white text-slate-700";
+}
+
 function scrollFeedToTop(container: HTMLDivElement | null, behavior: ScrollBehavior) {
   if (!container) {
     return;
@@ -145,62 +161,84 @@ function getLikeButtonClass({
 
 function DebateOverviewCard({
   blueCount,
-  bluePanelWidth,
   bluePercent,
   redCount,
-  redPanelWidth,
   redPercent,
   selectedSide,
   onSelect,
 }: {
   blueCount: number;
-  bluePanelWidth: number;
   bluePercent: number;
   redCount: number;
-  redPanelWidth: number;
   redPercent: number;
   selectedSide: Side;
   onSelect: (side: Side) => void;
 }) {
   return (
-    <article className="overflow-hidden rounded-[1.75rem] border border-slate-900 bg-slate-950 text-white xl:flex xl:h-full xl:flex-col">
-      <div className="flex gap-px bg-white/10 xl:min-h-0 xl:flex-1">
+    <article
+      aria-label="찬성 반대 선택과 현재 참여 비율"
+      className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white text-slate-950 xl:flex xl:h-full xl:flex-col"
+    >
+      <div className="grid gap-2 p-2 sm:grid-cols-2 xl:min-h-0 xl:flex-1">
         <button
           type="button"
+          aria-pressed={selectedSide === "blue"}
+          aria-label={`찬성 선택, 현재 ${bluePercent}%`}
           onClick={() => onSelect("blue")}
-          style={{ width: `${bluePanelWidth}%` }}
-          className={`motion-width relative min-h-[128px] shrink-0 overflow-hidden px-4 py-4 text-left transition-[transform,filter,box-shadow,background-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.992] xl:h-full ${
-            selectedSide === "blue" ? "ring-2 ring-inset ring-blue-300" : ""
-          }`}
+          className={`relative min-h-[132px] rounded-[1.35rem] border px-4 py-4 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 ${getOverviewButtonClass({
+            side: "blue",
+          })}`}
         >
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(21,94,239,0.92),rgba(15,23,42,0.8))]" />
-          <div className="relative">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-blue-100 md:text-sm">찬성</p>
-            <p className="mt-2.5 text-[2.3rem] font-black tracking-tight md:text-[2.7rem]">{bluePercent}%</p>
-            <p className="mt-1.5 text-xs text-blue-100 md:text-sm">댓글 {blueCount}개</p>
+          <div className="flex h-full flex-col">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-700 md:text-sm">찬성</p>
+              <p className="mt-2 text-[1.6rem] font-black tracking-tight text-slate-950 md:text-[1.9rem]">지금 시작</p>
+            </div>
+
+            <p className="mt-3 break-keep text-sm leading-5 text-slate-600">집중 근무, 채용 경쟁력, 번아웃 완화</p>
+
+            <div className="mt-auto flex items-end justify-between gap-3 pt-5">
+              <div>
+                <p className="text-[1.95rem] font-black tracking-tight text-slate-950 md:text-[2.2rem]">{bluePercent}%</p>
+                <p className="mt-1 text-xs font-medium text-slate-500 md:text-sm">댓글 {blueCount}개</p>
+              </div>
+            </div>
           </div>
         </button>
 
         <button
           type="button"
+          aria-pressed={selectedSide === "red"}
+          aria-label={`반대 선택, 현재 ${redPercent}%`}
           onClick={() => onSelect("red")}
-          style={{ width: `${redPanelWidth}%` }}
-          className={`motion-width relative min-h-[128px] shrink-0 overflow-hidden px-4 py-4 text-left transition-[transform,filter,box-shadow,background-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:brightness-110 active:scale-[0.992] xl:h-full ${
-            selectedSide === "red" ? "ring-2 ring-inset ring-red-200" : ""
-          }`}
+          className={`relative min-h-[132px] rounded-[1.35rem] border px-4 py-4 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ${getOverviewButtonClass({
+            side: "red",
+          })}`}
         >
-          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(240,68,56,0.95),rgba(124,45,18,0.9))]" />
-          <div className="relative">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-red-50 md:text-sm">반대</p>
-            <p className="mt-2.5 text-[2.3rem] font-black tracking-tight md:text-[2.7rem]">{redPercent}%</p>
-            <p className="mt-1.5 text-xs text-red-100 md:text-sm">댓글 {redCount}개</p>
+          <div className="flex h-full flex-col">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-red-700 md:text-sm">반대</p>
+              <p className="mt-2 text-[1.6rem] font-black tracking-tight text-slate-950 md:text-[1.9rem]">조정이 먼저</p>
+            </div>
+
+            <p className="mt-3 break-keep text-sm leading-5 text-slate-600">운영 공백, 인건비 부담, 서비스 품질 저하</p>
+
+            <div className="mt-auto flex items-end justify-between gap-3 pt-5">
+              <div>
+                <p className="text-[1.95rem] font-black tracking-tight text-slate-950 md:text-[2.2rem]">{redPercent}%</p>
+                <p className="mt-1 text-xs font-medium text-slate-500 md:text-sm">댓글 {redCount}개</p>
+              </div>
+            </div>
           </div>
         </button>
       </div>
 
-      <div className="flex h-3 w-full bg-white/10">
-        <div className="motion-width bg-blue-500" style={{ width: `${bluePercent}%` }} />
-        <div className="motion-width bg-red-500" style={{ width: `${redPercent}%` }} />
+      <div className="border-t border-slate-200 px-4 py-3">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">현재 분포</div>
+        <div className="mt-2 flex h-2.5 w-full overflow-hidden rounded-full bg-slate-100">
+          <div className="motion-width bg-blue-600" style={{ width: `${bluePercent}%` }} />
+          <div className="motion-width bg-red-500" style={{ width: `${redPercent}%` }} />
+        </div>
       </div>
     </article>
   );
@@ -218,12 +256,14 @@ function FeaturedOpinionCard({
   if (!message) {
     return (
       <article
-        className={`flex min-h-[112px] flex-col rounded-[1.45rem] border ${meta.featuredBorder} ${meta.featuredBackground} p-4 xl:min-h-0 xl:flex-1`}
+        className={`flex min-h-[104px] flex-col rounded-[1.45rem] border ${meta.featuredBorder} ${meta.featuredBackground} p-3.5 md:p-4 xl:min-h-0 xl:flex-1`}
       >
-        <p className={`text-xs font-black uppercase tracking-[0.28em] ${meta.featuredText}`}>{meta.label} 핵심</p>
-        <p className="mt-1.5 text-[11px] font-semibold text-slate-500">좋아요 1위 의견</p>
-        <p className="mt-3 overflow-hidden break-keep text-[13px] leading-5 text-slate-600 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
-          아직 대표 의견이 없습니다. 댓글 좋아요가 쌓이면 여기에서 핵심 논점을 보여줍니다.
+        <div className="flex items-center justify-between gap-3">
+          <p className={`text-xs font-black uppercase tracking-[0.28em] ${meta.featuredText}`}>{meta.label} 핵심</p>
+          <span className="text-[11px] font-semibold text-slate-500">좋아요 0</span>
+        </div>
+        <p className="mt-3 break-keep text-[13px] leading-5 text-slate-600 md:text-[14px] md:leading-6">
+          아직 대표 의견이 없습니다.
         </p>
       </article>
     );
@@ -231,25 +271,22 @@ function FeaturedOpinionCard({
 
   return (
     <article
-      className={`flex min-h-[112px] flex-col rounded-[1.45rem] border ${meta.featuredBorder} ${meta.featuredBackground} p-4 xl:min-h-0 xl:flex-1`}
+      className={`flex min-h-[104px] flex-col rounded-[1.45rem] border ${meta.featuredBorder} ${meta.featuredBackground} p-3.5 md:p-4 xl:min-h-0 xl:flex-1`}
     >
       <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className={`text-xs font-black uppercase tracking-[0.28em] ${meta.featuredText}`}>{meta.label} 핵심</p>
-          <p className="mt-1.5 text-[11px] font-semibold text-slate-500">{meta.summary}</p>
-        </div>
+        <p className={`text-xs font-black uppercase tracking-[0.28em] ${meta.featuredText}`}>{meta.label} 핵심</p>
         <span
-          className={`shrink-0 rounded-full border ${meta.chipBorder} ${meta.chipBackground} px-3 py-1 text-xs font-semibold ${meta.chipText}`}
+          className={`shrink-0 rounded-full border ${meta.chipBorder} ${meta.chipBackground} px-2.5 py-1 text-[11px] font-semibold ${meta.chipText} md:px-3 md:text-xs`}
         >
           좋아요 {message.likeCount}
         </span>
       </div>
 
-      <p className="mt-3 overflow-hidden break-keep text-[13px] leading-5 text-slate-700 [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
+      <p className="mt-3 break-keep text-[13px] leading-5 text-slate-700 md:text-[14px] md:leading-6">
         {message.text}
       </p>
 
-      <div className="mt-auto flex items-center justify-between gap-3 pt-3 text-[12px] font-medium text-slate-500">
+      <div className="mt-auto flex items-center justify-between gap-3 pt-4 text-[11px] font-medium text-slate-500 md:pt-5 md:text-[12px]">
         <span>{message.author}</span>
         <time>{message.time}</time>
       </div>
@@ -343,8 +380,6 @@ export default function OfficeHoursBoard() {
   const queuedMessageCount = queuedMessages.length;
   const bluePercent = getMessagePercent(blueCount, totalCount);
   const redPercent = getMessagePercent(redCount, totalCount);
-  const bluePanelWidth = totalCount ? bluePercent : 50;
-  const redPanelWidth = totalCount ? redPercent : 50;
   const refreshButtonLabel = getRefreshButtonLabel();
 
   useLayoutEffect(() => {
@@ -464,10 +499,8 @@ export default function OfficeHoursBoard() {
             <div className="grid gap-3 xl:grid-cols-[1.25fr_0.75fr]">
               <DebateOverviewCard
                 blueCount={blueCount}
-                bluePanelWidth={bluePanelWidth}
                 bluePercent={bluePercent}
                 redCount={redCount}
-                redPanelWidth={redPanelWidth}
                 redPercent={redPercent}
                 selectedSide={selectedSide}
                 onSelect={setSelectedSide}
