@@ -8,7 +8,6 @@ import {
   ChatMessage,
   createIncomingMessage,
   createMessage,
-  formatTime,
   getFeaturedMessage,
   getMessagesBySide,
   getMostLikedMessage,
@@ -82,10 +81,6 @@ function getAuthorToken(author: string) {
   }
 
   return nextToken;
-}
-
-function getRefreshButtonLabel() {
-  return "댓글 새로고침";
 }
 
 function getOverviewButtonClass({
@@ -361,7 +356,6 @@ export default function OfficeHoursBoard() {
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [queuedMessages, setQueuedMessages] = useState<ChatMessage[]>([]);
-  const [lastRefreshedAt, setLastRefreshedAt] = useState(() => formatTime());
   const [isPending, startTransition] = useTransition();
   const feedRef = useRef<HTMLDivElement | null>(null);
   const pendingScrollBehaviorRef = useRef<ScrollBehavior | null>(null);
@@ -380,7 +374,6 @@ export default function OfficeHoursBoard() {
   const queuedMessageCount = queuedMessages.length;
   const bluePercent = getMessagePercent(blueCount, totalCount);
   const redPercent = getMessagePercent(redCount, totalCount);
-  const refreshButtonLabel = getRefreshButtonLabel();
 
   useLayoutEffect(() => {
     const nextBehavior = pendingScrollBehaviorRef.current;
@@ -415,16 +408,14 @@ export default function OfficeHoursBoard() {
     };
   }, []);
 
-  function handleRefreshFeed() {
+  function handleLoadMore() {
     if (!queuedMessageCount) {
-      setLastRefreshedAt(formatTime());
       return;
     }
 
     pendingScrollBehaviorRef.current = "smooth";
     setMessages((current) => appendMessages(current, queuedMessages));
     setQueuedMessages([]);
-    setLastRefreshedAt(formatTime());
   }
 
   function handleMessageLike(messageId: string) {
@@ -443,7 +434,6 @@ export default function OfficeHoursBoard() {
     const nextSide = selectedSide;
 
     setDraft("");
-    setLastRefreshedAt(formatTime());
     pendingScrollBehaviorRef.current = "smooth";
 
     startTransition(() => {
@@ -491,8 +481,6 @@ export default function OfficeHoursBoard() {
 
               <div className="flex flex-nowrap items-center gap-2 overflow-x-auto pb-1 text-[11px] font-semibold text-slate-400 md:text-xs lg:shrink-0">
                 <span className="shrink-0 whitespace-nowrap text-slate-500">참여 {totalCount}건</span>
-                <span aria-hidden="true" className="h-3 w-px shrink-0 bg-slate-200" />
-                <span className="shrink-0 whitespace-nowrap">마지막 새로고침 {lastRefreshedAt}</span>
               </div>
             </div>
 
@@ -515,20 +503,18 @@ export default function OfficeHoursBoard() {
         </section>
 
         <section className="rounded-[2rem] border border-white/80 bg-white/76 shadow-[0_24px_70px_rgba(15,23,42,0.1)] backdrop-blur-xl">
-          <div className="flex flex-col gap-3 border-b border-black/6 px-4 py-4 md:flex-row md:items-end md:justify-between md:px-5">
-            <div>
-              <h2 className="mt-1.5 text-[1.5rem] font-black tracking-tight text-slate-950">전체 댓글</h2>
-            </div>
+          <div className="flex items-end justify-between border-b border-black/6 px-4 py-4 md:px-5">
+            <h2 className="mt-1.5 text-[1.5rem] font-black tracking-tight text-slate-950">전체 댓글</h2>
 
-            <div className="flex flex-wrap gap-2">
+            {queuedMessageCount > 0 ? (
               <button
                 type="button"
-                onClick={handleRefreshFeed}
-                className="rounded-full bg-slate-950 px-4 py-2 text-xs font-semibold text-white transition-[transform,background-color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-[0_18px_32px_rgba(15,23,42,0.2)] active:scale-[0.985] md:text-sm"
+                onClick={handleLoadMore}
+                className="flex items-center gap-1.5 rounded-full bg-slate-950 px-4 py-2 text-xs font-semibold text-white transition-[transform,background-color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-[0_18px_32px_rgba(15,23,42,0.2)] active:scale-[0.985] md:text-sm"
               >
-                {refreshButtonLabel}
+                {queuedMessageCount}개의 새 댓글 더보기
               </button>
-            </div>
+            ) : null}
           </div>
 
           <div ref={feedRef} className={`${FEED_HEIGHT_CLASS} overflow-y-auto px-3 py-3 md:px-4`}>
