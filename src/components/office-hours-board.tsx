@@ -180,22 +180,22 @@ function DebateOverviewCard({
           aria-pressed={selectedSide === "blue"}
           aria-label={`찬성 선택, 현재 ${bluePercent}%`}
           onClick={() => onSelect("blue")}
-          className={`relative min-h-[80px] rounded-xl border px-3 py-2 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 md:min-h-[132px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
+          className={`relative min-h-[64px] rounded-xl border px-2 py-2 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 md:min-h-[100px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
             side: "blue",
           })}`}
         >
           <div className="flex h-full flex-col">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-blue-700 md:text-xs md:tracking-[0.24em]">찬성</p>
-              <p className="mt-1 text-[1.1rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">지금 시작</p>
+              <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-blue-700 md:text-xs md:tracking-[0.24em]">찬성</p>
+              <p className="mt-0.5 text-[0.95rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">지금 시작</p>
             </div>
 
-            <p className="mt-1 break-keep text-xs leading-4 text-slate-600 md:mt-3 md:text-sm">집중 근무, 채용 경쟁력, 번아웃 완화</p>
+            <p className="mt-0.5 break-keep text-[10px] leading-3.5 text-slate-600 md:mt-3 md:text-sm">집중 근무, 채용 경쟁력, 번아웃 완화</p>
 
-            <div className="mt-auto flex items-end justify-between gap-2 pt-2 md:gap-3 md:pt-5">
+            <div className="mt-auto flex items-end justify-between gap-2 pt-1.5 md:gap-3 md:pt-5">
               <div>
-                <p className="text-[1.2rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{bluePercent}%</p>
-                <p className="mt-0.5 text-[10px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {blueCount}개</p>
+                <p className="text-[1rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{bluePercent}%</p>
+                <p className="mt-0.5 text-[9px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {blueCount}개</p>
               </div>
             </div>
           </div>
@@ -206,22 +206,22 @@ function DebateOverviewCard({
           aria-pressed={selectedSide === "red"}
           aria-label={`반대 선택, 현재 ${redPercent}%`}
           onClick={() => onSelect("red")}
-          className={`relative min-h-[80px] rounded-xl border px-3 py-2 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 md:min-h-[132px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
+          className={`relative min-h-[64px] rounded-xl border px-2 py-2 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 md:min-h-[100px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
             side: "red",
           })}`}
         >
           <div className="flex h-full flex-col">
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-red-700 md:text-xs md:tracking-[0.24em]">반대</p>
-              <p className="mt-1 text-[1.1rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">조정이 먼저</p>
+              <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-red-700 md:text-xs md:tracking-[0.24em]">반대</p>
+              <p className="mt-0.5 text-[0.95rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">조정이 먼저</p>
             </div>
 
-            <p className="mt-1 break-keep text-xs leading-4 text-slate-600 md:mt-3 md:text-sm">운영 공백, 인건비 부담, 서비스 품질 저하</p>
+            <p className="mt-0.5 break-keep text-[10px] leading-3.5 text-slate-600 md:mt-3 md:text-sm">운영 공백, 인건비 부담, 서비스 품질 저하</p>
 
-            <div className="mt-auto flex items-end justify-between gap-2 pt-2 md:gap-3 md:pt-5">
+            <div className="mt-auto flex items-end justify-between gap-2 pt-1.5 md:gap-3 md:pt-5">
               <div>
-                <p className="text-[1.2rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{redPercent}%</p>
-                <p className="mt-0.5 text-[10px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {redCount}개</p>
+                <p className="text-[1rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{redPercent}%</p>
+                <p className="mt-0.5 text-[9px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {redCount}개</p>
               </div>
             </div>
           </div>
