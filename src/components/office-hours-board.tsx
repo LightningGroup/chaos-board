@@ -464,7 +464,7 @@ export default function OfficeHoursBoard() {
               </div>
             </div>
 
-            <div className="grid gap-2 xl:grid-cols-[1.25fr_0.75fr]">
+            <div className="grid gap-2">
               <DebateOverviewCard
                 blueCount={blueCount}
                 bluePercent={bluePercent}
@@ -473,11 +473,6 @@ export default function OfficeHoursBoard() {
                 selectedSide={selectedSide}
                 onSelect={setSelectedSide}
               />
-
-              <div className={`hidden grid gap-3 sm:grid-cols-2 md:grid xl:flex xl:flex-col ${FEATURED_COLUMN_HEIGHT_CLASS}`}>
-                <FeaturedOpinionCard side="blue" message={blueFeaturedMessage} />
-                <FeaturedOpinionCard side="red" message={redFeaturedMessage} />
-              </div>
             </div>
           </div>
         </section>
