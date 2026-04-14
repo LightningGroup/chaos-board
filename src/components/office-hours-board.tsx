@@ -192,10 +192,10 @@ function DebateOverviewCard({
 
             <p className="mt-0.5 break-keep text-[10px] leading-3.5 text-slate-600 md:mt-3 md:text-sm">집중 근무, 채용 경쟁력, 번아웃 완화</p>
 
-            <div className="mt-auto flex items-end justify-between gap-2 pt-1.5 md:gap-3 md:pt-5">
+            <div className="mt-auto flex items-end justify-between gap-2 pt-0.5 md:gap-3 md:pt-5">
               <div>
                 <p className="text-[1rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{bluePercent}%</p>
-                <p className="mt-0.5 text-[9px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {blueCount}개</p>
+                <p className="mt-0 text-[9px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {blueCount}개</p>
               </div>
             </div>
           </div>
@@ -218,10 +218,10 @@ function DebateOverviewCard({
 
             <p className="mt-0.5 break-keep text-[10px] leading-3.5 text-slate-600 md:mt-3 md:text-sm">운영 공백, 인건비 부담, 서비스 품질 저하</p>
 
-            <div className="mt-auto flex items-end justify-between gap-2 pt-1.5 md:gap-3 md:pt-5">
+            <div className="mt-auto flex items-end justify-between gap-2 pt-0.5 md:gap-3 md:pt-5">
               <div>
                 <p className="text-[1rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{redPercent}%</p>
-                <p className="mt-0.5 text-[9px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {redCount}개</p>
+                <p className="mt-0 text-[9px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {redCount}개</p>
               </div>
             </div>
           </div>
