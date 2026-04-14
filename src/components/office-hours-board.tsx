@@ -174,30 +174,24 @@ function DebateOverviewCard({
       aria-label="찬성 반대 선택과 현재 참여 비율"
       className="overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-950 md:rounded-[1.75rem] xl:flex xl:h-full xl:flex-col"
     >
-      <div className="grid gap-2 p-2 sm:grid-cols-2 xl:min-h-0 xl:flex-1">
+      <div className="grid gap-1 p-1.5 sm:gap-2 sm:p-2 md:p-2 xl:min-h-0 xl:flex-1">
         <button
           type="button"
           aria-pressed={selectedSide === "blue"}
           aria-label={`찬성 선택, 현재 ${bluePercent}%`}
           onClick={() => onSelect("blue")}
-          className={`relative min-h-[56px] rounded-xl border px-1.5 py-1.5 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 md:min-h-[100px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
+          className={`relative flex items-center justify-between rounded-lg border px-2 py-1.5 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 md:min-h-[100px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
             side: "blue",
           })}`}
         >
-          <div className="flex h-full flex-col">
-            <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-blue-700 md:text-xs md:tracking-[0.24em]">찬성</p>
-              <p className="mt-0 text-[0.85rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">지금 시작</p>
-            </div>
-
-            <p className="mt-0 break-keep text-[9px] leading-3 text-slate-600 md:mt-3 md:text-sm">집중 근무, 채용 경쟁력, 번아웃 완화</p>
-
-            <div className="mt-auto flex items-end justify-between gap-2 pt-0.5 md:gap-3 md:pt-5">
-              <div>
-                <p className="text-[0.9rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{bluePercent}%</p>
-                <p className="mt-0 text-[8px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {blueCount}개</p>
-              </div>
-            </div>
+          <div className="flex flex-col">
+            <p className="text-[8px] font-semibold uppercase tracking-[0.15em] text-blue-700 md:text-xs md:tracking-[0.24em]">찬성</p>
+            <p className="mt-0 text-[0.75rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">지금 시작</p>
+            <p className="mt-0 hidden text-[8px] leading-3 text-slate-600 md:mt-3 md:block md:text-sm">집중 근무, 채용 경쟁력, 번아웃 완화</p>
+          </div>
+          <div className="flex flex-col items-end">
+            <p className="text-[0.9rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{bluePercent}%</p>
+            <p className="mt-0 text-[7px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {blueCount}개</p>
           </div>
         </button>
 
@@ -206,24 +200,18 @@ function DebateOverviewCard({
           aria-pressed={selectedSide === "red"}
           aria-label={`반대 선택, 현재 ${redPercent}%`}
           onClick={() => onSelect("red")}
-          className={`relative min-h-[56px] rounded-xl border px-1.5 py-1.5 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 md:min-h-[100px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
+          className={`relative flex items-center justify-between rounded-lg border px-2 py-1.5 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 md:min-h-[100px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
             side: "red",
           })}`}
         >
-          <div className="flex h-full flex-col">
-            <div>
-              <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-red-700 md:text-xs md:tracking-[0.24em]">반대</p>
-              <p className="mt-0 text-[0.85rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">조정이 먼저</p>
-            </div>
-
-            <p className="mt-0 break-keep text-[9px] leading-3 text-slate-600 md:mt-3 md:text-sm">운영 공백, 인건비 부담, 서비스 품질 저하</p>
-
-            <div className="mt-auto flex items-end justify-between gap-2 pt-0.5 md:gap-3 md:pt-5">
-              <div>
-                <p className="text-[0.9rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{redPercent}%</p>
-                <p className="mt-0 text-[8px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {redCount}개</p>
-              </div>
-            </div>
+          <div className="flex flex-col">
+            <p className="text-[8px] font-semibold uppercase tracking-[0.15em] text-red-700 md:text-xs md:tracking-[0.24em]">반대</p>
+            <p className="mt-0 text-[0.75rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">조정이 먼저</p>
+            <p className="mt-0 hidden text-[8px] leading-3 text-slate-600 md:mt-3 md:block md:text-sm">운영 공백, 인건비 부담, 서비스 품질 저하</p>
+          </div>
+          <div className="flex flex-col items-end">
+            <p className="text-[0.9rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{redPercent}%</p>
+            <p className="mt-0 text-[7px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {redCount}개</p>
           </div>
         </button>
       </div>
@@ -486,7 +474,7 @@ export default function OfficeHoursBoard() {
                 onSelect={setSelectedSide}
               />
 
-              <div className={`grid gap-3 sm:grid-cols-2 xl:flex xl:flex-col ${FEATURED_COLUMN_HEIGHT_CLASS}`}>
+              <div className={`hidden grid gap-3 sm:grid-cols-2 md:grid xl:flex xl:flex-col ${FEATURED_COLUMN_HEIGHT_CLASS}`}>
                 <FeaturedOpinionCard side="blue" message={blueFeaturedMessage} />
                 <FeaturedOpinionCard side="red" message={redFeaturedMessage} />
               </div>
