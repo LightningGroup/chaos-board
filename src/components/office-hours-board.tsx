@@ -322,7 +322,7 @@ function MessageCard({
           type="button"
           aria-pressed={message.likedByMe}
           onClick={() => onLike(message.id)}
-          className={`shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition-[transform,background-color,color,box-shadow,border-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] md:px-3.5 md:text-xs ${likeButtonClass}`}
+          className={`shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition-[transform,background-color,color,box-shadow,border-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] md:px-3.5 md:py-2 md:text-xs ${likeButtonClass}`}
         >
           좋아요 {message.likeCount}
         </button>
@@ -523,7 +523,7 @@ export default function OfficeHoursBoard() {
                     key={side}
                     type="button"
                     onClick={() => setSelectedSide(side)}
-                    className={`flex-1 min-w-[70px] rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition-[transform,background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] sm:flex-none sm:px-3 sm:py-2 sm:text-xs md:text-sm ${activeClass}`}
+                    className={`flex-1 min-w-[70px] whitespace-nowrap rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition-[transform,background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] sm:flex-none sm:px-3 sm:py-2 sm:text-xs md:text-sm ${activeClass}`}
                   >
                     {meta.label}으로 작성
                   </button>
@@ -537,7 +537,7 @@ export default function OfficeHoursBoard() {
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
               placeholder={`${sideMeta[selectedSide].label} 입장에서 의견을 남겨보세요.`}
-              className="h-9 w-full flex-1 rounded-lg border border-white/10 bg-white/7 px-3 py-1.5 text-[16px] text-white outline-none ring-0 placeholder:text-slate-500 focus:border-white/30 sm:h-10 sm:rounded-full sm:px-4 sm:py-0 md:h-12"
+              className="h-9 w-full flex-1 rounded-lg border border-white/10 bg-white/7 px-3 py-1.5 text-[16px] text-white outline-none ring-0 placeholder:text-slate-500 focus:border-white/30 sm:h-10 sm:rounded-full sm:px-4 sm:py-0 md:h-12 md:text-[14px]"
             />
             <button
               type="submit"
