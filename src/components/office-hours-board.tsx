@@ -19,7 +19,7 @@ import {
 
 const INCOMING_MESSAGE_INTERVAL_MS = 4500;
 const REPLY_DELAY_MS = 1400;
-const FEED_HEIGHT_CLASS = "h-[300px] md:h-[520px]";
+const FEED_LAYOUT_CLASS = "min-h-0 flex-1 md:h-[520px] md:flex-none";
 const FEATURED_COLUMN_HEIGHT_CLASS = "xl:h-full";
 const EMPTY_AUTHOR_TOKEN = "?";
 const ZERO_COUNT = 0;
@@ -441,8 +441,8 @@ export default function OfficeHoursBoard() {
   }
 
   return (
-    <main className="min-h-screen px-3 py-2 md:px-5 md:py-4 lg:px-6">
-      <div className="mx-auto flex w-full max-w-[1080px] flex-col gap-2 md:gap-4">
+    <main className="flex h-[100dvh] flex-col px-3 pt-2 md:block md:h-auto md:min-h-screen md:px-5 md:py-4 lg:px-6">
+      <div className="mx-auto flex w-full max-w-[1080px] flex-1 min-h-0 flex-col gap-2 md:gap-4">
         <section className="relative overflow-hidden rounded-2xl border border-white/80 bg-white/76 p-3 shadow-[0_24px_80px_rgba(15,23,42,0.12)] backdrop-blur-xl md:rounded-[2rem] md:p-4 lg:p-5">
           <div className="absolute inset-x-0 top-0 flex h-1.5 overflow-hidden">
             <div className="motion-width bg-blue-500" style={{ width: `${bluePercent}%` }} />
@@ -477,7 +477,7 @@ export default function OfficeHoursBoard() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-white/80 bg-white/76 shadow-[0_24px_70px_rgba(15,23,42,0.1)] backdrop-blur-xl md:rounded-[2rem]">
+        <section className="flex min-h-0 flex-1 flex-col rounded-xl border border-white/80 bg-white/76 shadow-[0_24px_70px_rgba(15,23,42,0.1)] backdrop-blur-xl md:min-h-[auto] md:flex-initial md:rounded-[2rem]">
           <div className="flex items-end justify-between border-b border-black/6 px-3 py-3 md:px-5 md:py-4">
             <h2 className="text-[1.1rem] font-black tracking-tight text-slate-950 md:mt-1.5 md:text-[1.5rem]">전체 댓글</h2>
 
@@ -492,7 +492,7 @@ export default function OfficeHoursBoard() {
             ) : null}
           </div>
 
-          <div ref={feedRef} className={`${FEED_HEIGHT_CLASS} overflow-y-auto px-2 py-2 md:px-4 md:py-3`}>
+          <div ref={feedRef} className={`${FEED_LAYOUT_CLASS} overflow-y-auto px-2 py-2 md:px-4 md:py-3`}>
             <div className="space-y-2">
               {feedMessages.map((message) => (
                 <MessageCard
@@ -506,7 +506,7 @@ export default function OfficeHoursBoard() {
           </div>
         </section>
 
-        <form onSubmit={handleSubmit} className="rounded-xl bg-slate-950 p-2.5 text-white shadow-[0_24px_60px_rgba(15,23,42,0.18)] md:rounded-[2rem] md:p-4">
+        <form onSubmit={handleSubmit} className="rounded-t-xl rounded-b-none bg-slate-950 p-2.5 text-white shadow-[0_24px_60px_rgba(15,23,42,0.18)] md:rounded-[2rem] md:p-4">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-[11px] font-medium leading-4 text-slate-400 sm:shrink-0 md:text-[12px] md:leading-5">
               작성할 때만 입장을 고르고, 피드에서는 댓글을 한 번에 보여줍니다.
