@@ -291,38 +291,38 @@ function MessageCard({
   return (
     <article
       data-message-id={message.id}
-      className={`motion-comment-enter rounded-[1.4rem] border p-4 shadow-[0_14px_36px_rgba(15,23,42,0.05)] transition-[transform,box-shadow,border-color,background-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_18px_42px_rgba(15,23,42,0.08)] ${cardClass}`}
+      className={`motion-comment-enter rounded-lg border px-2 py-1.5 shadow-[0_14px_36px_rgba(15,23,42,0.05)] transition-[transform,box-shadow,border-color,background-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_18px_42px_rgba(15,23,42,0.08)] md:rounded-[1.4rem] md:p-4 ${cardClass}`}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-2 md:gap-3">
         <div
           aria-hidden="true"
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-black ${avatarClass}`}
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-black md:h-10 md:w-10 md:text-sm ${avatarClass}`}
         >
           {getAuthorToken(message.author)}
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
             {isBest ? (
-              <span className="rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-[11px] font-black uppercase tracking-[0.2em] text-amber-700">
+              <span className="rounded-full border border-amber-300 bg-amber-50 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-[0.15em] text-amber-700 md:px-2 md:text-[11px] md:tracking-[0.2em]">
                 Best
               </span>
             ) : null}
-            <p className="text-sm font-bold text-slate-950">{message.author}</p>
+            <p className="text-[11px] font-bold text-slate-950 md:text-sm">{message.author}</p>
             {message.isLocal ? (
-              <span className="rounded-full bg-slate-950 px-2 py-0.5 text-[11px] font-semibold text-white">내 댓글</span>
+              <span className="rounded-full bg-slate-950 px-1.5 py-0.5 text-[9px] font-semibold text-white md:px-2 md:text-[11px]">내 댓글</span>
             ) : null}
-            <time className="text-xs font-medium text-slate-500">{message.time}</time>
+            <time className="text-[10px] font-medium text-slate-500 md:text-xs">{message.time}</time>
           </div>
 
-          <p className="mt-2 break-keep text-[15px] leading-6 text-slate-700">{message.text}</p>
+          <p className="mt-1 break-keep text-[12px] leading-4 text-slate-700 md:mt-2 md:text-[15px] md:leading-6">{message.text}</p>
         </div>
 
         <button
           type="button"
           aria-pressed={message.likedByMe}
           onClick={() => onLike(message.id)}
-          className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-[transform,background-color,color,box-shadow,border-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] ${likeButtonClass}`}
+          className={`shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition-[transform,background-color,color,box-shadow,border-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] md:px-3.5 md:text-xs ${likeButtonClass}`}
         >
           좋아요 {message.likeCount}
         </button>
@@ -441,9 +441,9 @@ export default function OfficeHoursBoard() {
   }
 
   return (
-    <main className="flex h-[100dvh] flex-col px-3 pt-2 md:block md:h-auto md:min-h-screen md:px-5 md:py-4 lg:px-6">
-      <div className="mx-auto flex w-full max-w-[1080px] flex-1 min-h-0 flex-col gap-2 md:gap-4">
-        <section className="relative overflow-hidden rounded-2xl border border-white/80 bg-white/76 p-3 shadow-[0_24px_80px_rgba(15,23,42,0.12)] backdrop-blur-xl md:rounded-[2rem] md:p-4 lg:p-5">
+    <main className="flex h-[100dvh] flex-col md:block md:h-auto md:min-h-screen md:px-5 md:py-4 lg:px-6">
+      <div className="mx-auto flex w-full max-w-[1080px] flex-1 min-h-0 flex-col md:gap-4">
+        <section className="relative overflow-hidden rounded-none border-b border-white/80 bg-white/76 p-2 shadow-[0_24px_80px_rgba(15,23,42,0.12)] backdrop-blur-xl md:rounded-[2rem] md:border md:p-4 lg:p-5">
           <div className="absolute inset-x-0 top-0 flex h-1.5 overflow-hidden">
             <div className="motion-width bg-blue-500" style={{ width: `${bluePercent}%` }} />
             <div className="motion-width bg-red-500" style={{ width: `${redPercent}%` }} />
@@ -477,9 +477,9 @@ export default function OfficeHoursBoard() {
           </div>
         </section>
 
-        <section className="flex min-h-0 flex-1 flex-col rounded-xl border border-white/80 bg-white/76 shadow-[0_24px_70px_rgba(15,23,42,0.1)] backdrop-blur-xl md:min-h-[auto] md:flex-initial md:rounded-[2rem]">
-          <div className="flex items-end justify-between border-b border-black/6 px-3 py-3 md:px-5 md:py-4">
-            <h2 className="text-[1.1rem] font-black tracking-tight text-slate-950 md:mt-1.5 md:text-[1.5rem]">전체 댓글</h2>
+        <section className="flex min-h-0 flex-1 flex-col rounded-none bg-white/76 shadow-[0_24px_70px_rgba(15,23,42,0.1)] backdrop-blur-xl md:min-h-[auto] md:flex-initial md:rounded-[2rem] md:border md:border-white/80">
+          <div className="flex items-end justify-between border-b border-black/6 px-2 py-1.5 md:px-5 md:py-4">
+            <h2 className="text-[0.85rem] font-black tracking-tight text-slate-950 md:mt-1.5 md:text-[1.5rem]">전체 댓글</h2>
 
             {queuedMessageCount > 0 ? (
               <button
@@ -492,8 +492,8 @@ export default function OfficeHoursBoard() {
             ) : null}
           </div>
 
-          <div ref={feedRef} className={`${FEED_LAYOUT_CLASS} overflow-y-auto px-2 py-2 md:px-4 md:py-3`}>
-            <div className="space-y-2">
+          <div ref={feedRef} className={`${FEED_LAYOUT_CLASS} overflow-y-auto px-1.5 py-1.5 md:px-4 md:py-3`}>
+            <div className="space-y-1 md:space-y-2">
               {feedMessages.map((message) => (
                 <MessageCard
                   key={message.id}
@@ -506,9 +506,9 @@ export default function OfficeHoursBoard() {
           </div>
         </section>
 
-        <form onSubmit={handleSubmit} className="rounded-t-xl rounded-b-none bg-slate-950 p-2.5 text-white shadow-[0_24px_60px_rgba(15,23,42,0.18)] md:rounded-[2rem] md:p-4">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-[11px] font-medium leading-4 text-slate-400 sm:shrink-0 md:text-[12px] md:leading-5">
+        <form onSubmit={handleSubmit} className="rounded-none bg-slate-950 p-2 text-white shadow-[0_24px_60px_rgba(15,23,42,0.18)] md:rounded-[2rem] md:p-4">
+          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+            <div className="text-[10px] font-medium leading-4 text-slate-400 sm:shrink-0 md:text-[12px] md:leading-5">
               작성할 때만 입장을 고르고, 피드에서는 댓글을 한 번에 보여줍니다.
             </div>
 
@@ -523,7 +523,7 @@ export default function OfficeHoursBoard() {
                     key={side}
                     type="button"
                     onClick={() => setSelectedSide(side)}
-                    className={`flex-1 min-w-[80px] rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition-[transform,background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] sm:flex-none sm:px-3 sm:py-2 sm:text-xs md:text-sm ${activeClass}`}
+                    className={`flex-1 min-w-[70px] rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition-[transform,background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] sm:flex-none sm:px-3 sm:py-2 sm:text-xs md:text-sm ${activeClass}`}
                   >
                     {meta.label}으로 작성
                   </button>
@@ -532,17 +532,17 @@ export default function OfficeHoursBoard() {
             </div>
           </div>
 
-          <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
+          <div className="mt-1.5 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 md:mt-2">
             <input
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
               placeholder={`${sideMeta[selectedSide].label} 입장에서 의견을 남겨보세요.`}
-              className="h-11 w-full flex-1 rounded-xl border border-white/10 bg-white/7 px-4 py-2.5 text-[14px] text-white outline-none ring-0 placeholder:text-slate-500 focus:border-white/30 sm:h-10 sm:rounded-full sm:py-0 md:h-12"
+              className="h-9 w-full flex-1 rounded-lg border border-white/10 bg-white/7 px-3 py-1.5 text-[16px] text-white outline-none ring-0 placeholder:text-slate-500 focus:border-white/30 sm:h-10 sm:rounded-full sm:px-4 sm:py-0 md:h-12"
             />
             <button
               type="submit"
               disabled={isPending || draft.trim().length === 0}
-              className={`h-11 sm:h-10 w-full rounded-full px-4 text-[13px] font-bold text-white transition-[transform,background-color,box-shadow,opacity] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(37,99,235,0.32)] active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto md:h-12 md:text-[14px] ${sideMeta[selectedSide].actionBackground}`}
+              className={`h-9 sm:h-10 w-full rounded-full px-3 text-[11px] font-bold text-white transition-[transform,background-color,box-shadow,opacity] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(37,99,235,0.32)] active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-4 sm:text-[13px] md:h-12 md:text-[14px] ${sideMeta[selectedSide].actionBackground}`}
             >
               의견 보내기
             </button>
