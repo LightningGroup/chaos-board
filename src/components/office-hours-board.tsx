@@ -178,7 +178,7 @@ function DebateOverviewCard({
           aria-pressed={selectedSide === "blue"}
           aria-label={`찬성 선택, 현재 ${bluePercent}%`}
           onClick={() => onSelect("blue")}
-          className={`relative flex items-center justify-between rounded-lg border px-2 py-1.5 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 md:min-h-[100px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
+          className={`relative flex items-center justify-between rounded-lg border px-2.5 py-2 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 md:min-h-[100px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
             side: "blue",
           })}`}
         >
@@ -198,7 +198,7 @@ function DebateOverviewCard({
           aria-pressed={selectedSide === "red"}
           aria-label={`반대 선택, 현재 ${redPercent}%`}
           onClick={() => onSelect("red")}
-          className={`relative flex items-center justify-between rounded-lg border px-2 py-1.5 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 md:min-h-[100px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
+          className={`relative flex items-center justify-between rounded-lg border px-2.5 py-2 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 md:min-h-[100px] md:rounded-[1.35rem] md:px-4 md:py-4 ${getOverviewButtonClass({
             side: "red",
           })}`}
         >
@@ -270,7 +270,7 @@ function MessageCard({
           type="button"
           aria-pressed={message.likedByMe}
           onClick={() => onLike(message.id)}
-          className={`shrink-0 rounded-full px-2.5 py-1.5 text-[12px] font-semibold transition-[transform,background-color,color,box-shadow,border-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] md:px-3.5 md:py-2 md:text-xs ${likeButtonClass}`}
+          className={`shrink-0 rounded-full px-3 py-2 text-[12px] font-semibold transition-[transform,background-color,color,box-shadow,border-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] md:px-3.5 md:py-2 md:text-xs ${likeButtonClass}`}
         >
           좋아요 {message.likeCount}
         </button>
@@ -431,7 +431,7 @@ export default function OfficeHoursBoard() {
               <button
                 type="button"
                 onClick={handleLoadMore}
-                className="flex items-center gap-1 rounded-full bg-slate-950 px-3 py-1.5 text-[12px] font-semibold text-white transition-[transform,background-color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-[0_18px_32px_rgba(15,23,42,0.2)] active:scale-[0.985] md:text-xs md:px-4 md:py-2"
+                className="flex items-center gap-1 rounded-full bg-slate-950 px-3.5 py-2 text-[12px] font-semibold text-white transition-[transform,background-color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-[0_18px_32px_rgba(15,23,42,0.2)] active:scale-[0.985] md:text-xs md:px-4 md:py-2"
               >
                 {queuedMessageCount}개의 새 댓글 더보기
               </button>
@@ -469,7 +469,7 @@ export default function OfficeHoursBoard() {
                     key={side}
                     type="button"
                     onClick={() => setSelectedSide(side)}
-                    className={`flex-1 min-w-[70px] whitespace-nowrap rounded-full px-2.5 py-1.5 text-[12px] font-semibold transition-[transform,background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] sm:flex-none sm:px-3 sm:py-2 sm:text-xs md:text-sm ${activeClass}`}
+                    className={`flex-1 min-w-[72px] whitespace-nowrap rounded-full px-3 py-2 text-[12px] font-semibold transition-[transform,background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] sm:flex-none sm:px-3 sm:py-2 sm:text-xs md:text-sm ${activeClass}`}
                   >
                     {meta.label}으로 작성
                   </button>
@@ -483,12 +483,12 @@ export default function OfficeHoursBoard() {
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
               placeholder={`${sideMeta[selectedSide].label} 입장에서 의견을 남겨보세요.`}
-              className="h-9 w-full flex-1 rounded-lg border border-white/10 bg-white/7 px-3 py-1.5 text-[16px] text-white outline-none ring-0 placeholder:text-slate-500 focus:border-white/30 sm:h-10 sm:rounded-full sm:px-4 sm:py-0 md:h-12 md:text-[14px]"
+              className="h-11 w-full flex-1 rounded-lg border border-white/10 bg-white/7 px-3.5 py-1.5 text-[16px] text-white outline-none ring-0 placeholder:text-slate-500 focus:border-white/30 sm:h-10 sm:rounded-full sm:px-4 sm:py-0 md:h-12 md:text-[14px]"
             />
             <button
               type="submit"
               disabled={isPending || draft.trim().length === 0}
-              className={`h-9 sm:h-10 w-full rounded-full px-3 text-[13px] font-bold text-white transition-[transform,background-color,box-shadow,opacity] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(37,99,235,0.32)] active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-4 sm:text-[13px] md:h-12 md:text-[14px] ${sideMeta[selectedSide].actionBackground}`}
+              className={`h-11 sm:h-10 w-full rounded-full px-3.5 text-[13px] font-bold text-white transition-[transform,background-color,box-shadow,opacity] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(37,99,235,0.32)] active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-4 sm:text-[13px] md:h-12 md:text-[14px] ${sideMeta[selectedSide].actionBackground}`}
             >
               의견 보내기
             </button>
