@@ -198,27 +198,6 @@ export function getMostLikedMessage(messages: ChatMessage[]) {
   }, null);
 }
 
-/** 각 진영에서 가장 공감을 많이 받은 댓글을 고른다. 동률이면 더 최근 댓글을 우선한다. */
-export function getFeaturedMessage(messages: ChatMessage[], side: Side) {
-  const sideMessages = getMessagesBySide(messages, side);
-
-  return sideMessages.reduce<ChatMessage | null>((featuredMessage, message) => {
-    if (!featuredMessage) {
-      return message;
-    }
-
-    if (message.likeCount > featuredMessage.likeCount) {
-      return message;
-    }
-
-    if (message.likeCount < featuredMessage.likeCount) {
-      return featuredMessage;
-    }
-
-    return message;
-  }, null);
-}
-
 /** 선택된 진영의 반대편 진영을 구한다. 자동 응답 댓글 방향을 결정할 때 사용한다. */
 export function getOppositeSide(side: Side) {
   if (side === "blue") {

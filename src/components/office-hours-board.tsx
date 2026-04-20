@@ -8,7 +8,6 @@ import {
   ChatMessage,
   createIncomingMessage,
   createMessage,
-  getFeaturedMessage,
   getMessagesBySide,
   getMostLikedMessage,
   getOppositeSide,
@@ -20,7 +19,6 @@ import {
 const INCOMING_MESSAGE_INTERVAL_MS = 4500;
 const REPLY_DELAY_MS = 1400;
 const FEED_LAYOUT_CLASS = "min-h-0 flex-1 md:h-[520px] md:flex-none";
-const FEATURED_COLUMN_HEIGHT_CLASS = "xl:h-full";
 const EMPTY_AUTHOR_TOKEN = "?";
 const ZERO_COUNT = 0;
 
@@ -187,7 +185,7 @@ function DebateOverviewCard({
           <div className="flex flex-col">
             <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-blue-700 md:text-xs md:tracking-[0.24em]">찬성</p>
             <p className="mt-0 text-[1rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">지금 시작</p>
-            <p className="mt-0 hidden text-[8px] leading-3 text-slate-600 md:mt-3 md:block md:text-sm">집중 근무, 채용 경쟁력, 번아웃 완화</p>
+            <p className="mt-0 hidden text-slate-600 md:mt-3 md:block md:text-sm">집중 근무, 채용 경쟁력, 번아웃 완화</p>
           </div>
           <div className="flex flex-col items-end">
             <p className="text-[1.125rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{bluePercent}%</p>
@@ -207,63 +205,13 @@ function DebateOverviewCard({
           <div className="flex flex-col">
             <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-red-700 md:text-xs md:tracking-[0.24em]">반대</p>
             <p className="mt-0 text-[1rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">조정이 먼저</p>
-            <p className="mt-0 hidden text-[8px] leading-3 text-slate-600 md:mt-3 md:block md:text-sm">운영 공백, 인건비 부담, 서비스 품질 저하</p>
+            <p className="mt-0 hidden text-slate-600 md:mt-3 md:block md:text-sm">운영 공백, 인건비 부담, 서비스 품질 저하</p>
           </div>
           <div className="flex flex-col items-end">
             <p className="text-[1.125rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{redPercent}%</p>
             <p className="mt-0 text-[11px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {redCount}개</p>
           </div>
         </button>
-      </div>
-    </article>
-  );
-}
-
-function FeaturedOpinionCard({
-  message,
-  side,
-}: {
-  message: ChatMessage | null;
-  side: Side;
-}) {
-  const meta = sideMeta[side];
-
-  if (!message) {
-    return (
-      <article
-        className={`flex min-h-[70px] flex-col rounded-xl border ${meta.featuredBorder} ${meta.featuredBackground} p-2.5 md:min-h-[104px] md:rounded-[1.45rem] md:p-3.5 lg:p-4 xl:min-h-0 xl:flex-1`}
-      >
-        <div className="flex items-center justify-between gap-2 md:gap-3">
-          <p className={`text-[11px] font-black uppercase tracking-[0.2em] md:text-xs md:tracking-[0.28em] ${meta.featuredText}`}>{meta.label} 핵심</p>
-          <span className="text-[11px] font-semibold text-slate-500 md:text-[11px]">좋아요 0</span>
-        </div>
-        <p className="mt-2 break-keep text-[14px] leading-5 text-slate-600 md:text-[13px] md:leading-5 lg:text-[14px] lg:leading-6">
-          아직 대표 의견이 없습니다.
-        </p>
-      </article>
-    );
-  }
-
-  return (
-    <article
-      className={`flex min-h-[70px] flex-col rounded-xl border ${meta.featuredBorder} ${meta.featuredBackground} p-2.5 md:min-h-[104px] md:rounded-[1.45rem] md:p-3.5 lg:p-4 xl:min-h-0 xl:flex-1`}
-    >
-      <div className="flex items-start justify-between gap-2 md:gap-3">
-        <p className={`text-[11px] font-black uppercase tracking-[0.2em] md:text-xs md:tracking-[0.28em] ${meta.featuredText}`}>{meta.label} 핵심</p>
-        <span
-          className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold md:px-2.5 md:py-1 md:text-[11px] ${meta.chipBorder} ${meta.chipBackground} ${meta.chipText}`}
-        >
-          좋아요 {message.likeCount}
-        </span>
-      </div>
-
-      <p className="mt-2 break-keep text-[14px] leading-5 text-slate-700 md:text-[13px] md:leading-5 lg:text-[14px] lg:leading-6">
-        {message.text}
-      </p>
-
-      <div className="mt-auto flex items-center justify-between gap-2 pt-2 text-[11px] font-medium text-slate-500 md:gap-3 md:pt-4 md:text-[11px] lg:text-[12px]">
-        <span>{message.author}</span>
-        <time>{message.time}</time>
       </div>
     </article>
   );
@@ -344,8 +292,6 @@ export default function OfficeHoursBoard() {
   const liveMessages = [...messages, ...queuedMessages];
   const liveBlueMessages = getMessagesBySide(liveMessages, "blue");
   const liveRedMessages = getMessagesBySide(liveMessages, "red");
-  const blueFeaturedMessage = getFeaturedMessage(liveMessages, "blue");
-  const redFeaturedMessage = getFeaturedMessage(liveMessages, "red");
   const bestMessage = getMostLikedMessage(messages);
   const feedMessages = [...messages].reverse();
   const blueCount = liveBlueMessages.length;
