@@ -185,13 +185,13 @@ function DebateOverviewCard({
           })}`}
         >
           <div className="flex flex-col">
-            <p className="text-[8px] font-semibold uppercase tracking-[0.15em] text-blue-700 md:text-xs md:tracking-[0.24em]">찬성</p>
-            <p className="mt-0 text-[0.75rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">지금 시작</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-blue-700 md:text-xs md:tracking-[0.24em]">찬성</p>
+            <p className="mt-0 text-[1rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">지금 시작</p>
             <p className="mt-0 hidden text-[8px] leading-3 text-slate-600 md:mt-3 md:block md:text-sm">집중 근무, 채용 경쟁력, 번아웃 완화</p>
           </div>
           <div className="flex flex-col items-end">
-            <p className="text-[0.9rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{bluePercent}%</p>
-            <p className="mt-0 text-[7px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {blueCount}개</p>
+            <p className="text-[1.125rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{bluePercent}%</p>
+            <p className="mt-0 text-[11px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {blueCount}개</p>
           </div>
         </button>
 
@@ -205,13 +205,13 @@ function DebateOverviewCard({
           })}`}
         >
           <div className="flex flex-col">
-            <p className="text-[8px] font-semibold uppercase tracking-[0.15em] text-red-700 md:text-xs md:tracking-[0.24em]">반대</p>
-            <p className="mt-0 text-[0.75rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">조정이 먼저</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-red-700 md:text-xs md:tracking-[0.24em]">반대</p>
+            <p className="mt-0 text-[1rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">조정이 먼저</p>
             <p className="mt-0 hidden text-[8px] leading-3 text-slate-600 md:mt-3 md:block md:text-sm">운영 공백, 인건비 부담, 서비스 품질 저하</p>
           </div>
           <div className="flex flex-col items-end">
-            <p className="text-[0.9rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{redPercent}%</p>
-            <p className="mt-0 text-[7px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {redCount}개</p>
+            <p className="text-[1.125rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{redPercent}%</p>
+            <p className="mt-0 text-[11px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {redCount}개</p>
           </div>
         </button>
       </div>
@@ -234,10 +234,10 @@ function FeaturedOpinionCard({
         className={`flex min-h-[70px] flex-col rounded-xl border ${meta.featuredBorder} ${meta.featuredBackground} p-2.5 md:min-h-[104px] md:rounded-[1.45rem] md:p-3.5 lg:p-4 xl:min-h-0 xl:flex-1`}
       >
         <div className="flex items-center justify-between gap-2 md:gap-3">
-          <p className={`text-[10px] font-black uppercase tracking-[0.2em] md:text-xs md:tracking-[0.28em] ${meta.featuredText}`}>{meta.label} 핵심</p>
-          <span className="text-[10px] font-semibold text-slate-500 md:text-[11px]">좋아요 0</span>
+          <p className={`text-[11px] font-black uppercase tracking-[0.2em] md:text-xs md:tracking-[0.28em] ${meta.featuredText}`}>{meta.label} 핵심</p>
+          <span className="text-[11px] font-semibold text-slate-500 md:text-[11px]">좋아요 0</span>
         </div>
-        <p className="mt-2 break-keep text-[12px] leading-4 text-slate-600 md:text-[13px] md:leading-5 lg:text-[14px] lg:leading-6">
+        <p className="mt-2 break-keep text-[14px] leading-5 text-slate-600 md:text-[13px] md:leading-5 lg:text-[14px] lg:leading-6">
           아직 대표 의견이 없습니다.
         </p>
       </article>
@@ -249,19 +249,19 @@ function FeaturedOpinionCard({
       className={`flex min-h-[70px] flex-col rounded-xl border ${meta.featuredBorder} ${meta.featuredBackground} p-2.5 md:min-h-[104px] md:rounded-[1.45rem] md:p-3.5 lg:p-4 xl:min-h-0 xl:flex-1`}
     >
       <div className="flex items-start justify-between gap-2 md:gap-3">
-        <p className={`text-[10px] font-black uppercase tracking-[0.2em] md:text-xs md:tracking-[0.28em] ${meta.featuredText}`}>{meta.label} 핵심</p>
+        <p className={`text-[11px] font-black uppercase tracking-[0.2em] md:text-xs md:tracking-[0.28em] ${meta.featuredText}`}>{meta.label} 핵심</p>
         <span
-          className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold md:px-2.5 md:py-1 md:text-[11px] ${meta.chipBorder} ${meta.chipBackground} ${meta.chipText}`}
+          className={`shrink-0 rounded-full border px-2 py-0.5 text-[11px] font-semibold md:px-2.5 md:py-1 md:text-[11px] ${meta.chipBorder} ${meta.chipBackground} ${meta.chipText}`}
         >
           좋아요 {message.likeCount}
         </span>
       </div>
 
-      <p className="mt-2 break-keep text-[12px] leading-4 text-slate-700 md:text-[13px] md:leading-5 lg:text-[14px] lg:leading-6">
+      <p className="mt-2 break-keep text-[14px] leading-5 text-slate-700 md:text-[13px] md:leading-5 lg:text-[14px] lg:leading-6">
         {message.text}
       </p>
 
-      <div className="mt-auto flex items-center justify-between gap-2 pt-2 text-[10px] font-medium text-slate-500 md:gap-3 md:pt-4 md:text-[11px] lg:text-[12px]">
+      <div className="mt-auto flex items-center justify-between gap-2 pt-2 text-[11px] font-medium text-slate-500 md:gap-3 md:pt-4 md:text-[11px] lg:text-[12px]">
         <span>{message.author}</span>
         <time>{message.time}</time>
       </div>
@@ -296,7 +296,7 @@ function MessageCard({
       <div className="flex items-start gap-2 md:gap-3">
         <div
           aria-hidden="true"
-          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-black md:h-10 md:w-10 md:text-sm ${avatarClass}`}
+          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-black md:h-10 md:w-10 md:text-sm ${avatarClass}`}
         >
           {getAuthorToken(message.author)}
         </div>
@@ -304,25 +304,25 @@ function MessageCard({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5 md:gap-2">
             {isBest ? (
-              <span className="rounded-full border border-amber-300 bg-amber-50 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-[0.15em] text-amber-700 md:px-2 md:text-[11px] md:tracking-[0.2em]">
+              <span className="rounded-full border border-amber-300 bg-amber-50 px-1.5 py-0.5 text-[10px] font-black uppercase tracking-[0.15em] text-amber-700 md:px-2 md:text-[11px] md:tracking-[0.2em]">
                 Best
               </span>
             ) : null}
-            <p className="text-[11px] font-bold text-slate-950 md:text-sm">{message.author}</p>
+            <p className="text-[13px] font-bold text-slate-950 md:text-sm">{message.author}</p>
             {message.isLocal ? (
-              <span className="rounded-full bg-slate-950 px-1.5 py-0.5 text-[9px] font-semibold text-white md:px-2 md:text-[11px]">내 댓글</span>
+              <span className="rounded-full bg-slate-950 px-1.5 py-0.5 text-[10px] font-semibold text-white md:px-2 md:text-[11px]">내 댓글</span>
             ) : null}
-            <time className="text-[10px] font-medium text-slate-500 md:text-xs">{message.time}</time>
+            <time className="text-[11px] font-medium text-slate-500 md:text-xs">{message.time}</time>
           </div>
 
-          <p className="mt-1 break-keep text-[12px] leading-4 text-slate-700 md:mt-2 md:text-[15px] md:leading-6">{message.text}</p>
+          <p className="mt-1 break-keep text-[14px] leading-5 text-slate-700 md:mt-2 md:text-[15px] md:leading-6">{message.text}</p>
         </div>
 
         <button
           type="button"
           aria-pressed={message.likedByMe}
           onClick={() => onLike(message.id)}
-          className={`shrink-0 rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition-[transform,background-color,color,box-shadow,border-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] md:px-3.5 md:py-2 md:text-xs ${likeButtonClass}`}
+          className={`shrink-0 rounded-full px-2.5 py-1.5 text-[12px] font-semibold transition-[transform,background-color,color,box-shadow,border-color] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] md:px-3.5 md:py-2 md:text-xs ${likeButtonClass}`}
         >
           좋아요 {message.likeCount}
         </button>
@@ -454,12 +454,12 @@ export default function OfficeHoursBoard() {
           <div className="relative flex flex-col gap-3">
             <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
               <div className="min-w-0">
-                <h1 className="whitespace-nowrap text-[1rem] font-black tracking-tight text-slate-950 sm:text-[2.1rem] xl:text-[3.35rem]">
+                <h1 className="break-keep text-[1.125rem] font-black leading-tight tracking-tight text-slate-950 sm:whitespace-nowrap sm:text-[2.1rem] sm:leading-normal xl:text-[3.35rem]">
                   주 4일제 도입, 지금 시작해야 하는가?
                 </h1>
               </div>
 
-              <div className="flex flex-nowrap items-center gap-2 overflow-x-auto text-[10px] font-semibold text-slate-400 md:text-xs lg:shrink-0">
+              <div className="flex flex-nowrap items-center gap-2 overflow-x-auto text-[11px] font-semibold text-slate-400 md:text-xs lg:shrink-0">
                 <span className="shrink-0 whitespace-nowrap text-slate-500">참여 {totalCount}건</span>
               </div>
             </div>
@@ -479,13 +479,13 @@ export default function OfficeHoursBoard() {
 
         <section className="flex min-h-0 flex-1 flex-col rounded-none bg-white/76 shadow-[0_24px_70px_rgba(15,23,42,0.1)] backdrop-blur-xl md:min-h-[auto] md:flex-initial md:rounded-[2rem] md:border md:border-white/80">
           <div className="flex items-end justify-between border-b border-black/6 px-2 py-1.5 md:px-5 md:py-4">
-            <h2 className="text-[0.85rem] font-black tracking-tight text-slate-950 md:mt-1.5 md:text-[1.5rem]">전체 댓글</h2>
+            <h2 className="text-[1.0625rem] font-black tracking-tight text-slate-950 md:mt-1.5 md:text-[1.5rem]">전체 댓글</h2>
 
             {queuedMessageCount > 0 ? (
               <button
                 type="button"
                 onClick={handleLoadMore}
-                className="flex items-center gap-1 rounded-full bg-slate-950 px-3 py-1.5 text-[11px] font-semibold text-white transition-[transform,background-color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-[0_18px_32px_rgba(15,23,42,0.2)] active:scale-[0.985] md:text-xs md:px-4 md:py-2"
+                className="flex items-center gap-1 rounded-full bg-slate-950 px-3 py-1.5 text-[12px] font-semibold text-white transition-[transform,background-color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-[0_18px_32px_rgba(15,23,42,0.2)] active:scale-[0.985] md:text-xs md:px-4 md:py-2"
               >
                 {queuedMessageCount}개의 새 댓글 더보기
               </button>
@@ -508,7 +508,7 @@ export default function OfficeHoursBoard() {
 
         <form onSubmit={handleSubmit} className="rounded-none bg-slate-950 p-2 text-white shadow-[0_24px_60px_rgba(15,23,42,0.18)] md:rounded-[2rem] md:p-4">
           <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
-            <div className="text-[10px] font-medium leading-4 text-slate-400 sm:shrink-0 md:text-[12px] md:leading-5">
+            <div className="text-[11px] font-medium leading-4 text-slate-400 sm:shrink-0 md:text-[12px] md:leading-5">
               작성할 때만 입장을 고르고, 피드에서는 댓글을 한 번에 보여줍니다.
             </div>
 
@@ -523,7 +523,7 @@ export default function OfficeHoursBoard() {
                     key={side}
                     type="button"
                     onClick={() => setSelectedSide(side)}
-                    className={`flex-1 min-w-[70px] whitespace-nowrap rounded-full px-2.5 py-1.5 text-[11px] font-semibold transition-[transform,background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] sm:flex-none sm:px-3 sm:py-2 sm:text-xs md:text-sm ${activeClass}`}
+                    className={`flex-1 min-w-[70px] whitespace-nowrap rounded-full px-2.5 py-1.5 text-[12px] font-semibold transition-[transform,background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] sm:flex-none sm:px-3 sm:py-2 sm:text-xs md:text-sm ${activeClass}`}
                   >
                     {meta.label}으로 작성
                   </button>
@@ -542,7 +542,7 @@ export default function OfficeHoursBoard() {
             <button
               type="submit"
               disabled={isPending || draft.trim().length === 0}
-              className={`h-9 sm:h-10 w-full rounded-full px-3 text-[11px] font-bold text-white transition-[transform,background-color,box-shadow,opacity] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(37,99,235,0.32)] active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-4 sm:text-[13px] md:h-12 md:text-[14px] ${sideMeta[selectedSide].actionBackground}`}
+              className={`h-9 sm:h-10 w-full rounded-full px-3 text-[13px] font-bold text-white transition-[transform,background-color,box-shadow,opacity] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(37,99,235,0.32)] active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-4 sm:text-[13px] md:h-12 md:text-[14px] ${sideMeta[selectedSide].actionBackground}`}
             >
               의견 보내기
             </button>
