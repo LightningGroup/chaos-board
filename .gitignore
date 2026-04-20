@@ -23,6 +23,10 @@
 .idea/
 *.pem
 
+# local agent / tooling
+.opencode/
+/tmp/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
