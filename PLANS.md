@@ -5,6 +5,9 @@
 
 비사소한 작업은 이 문서를 따른다.
 
+각 작업의 실제 계획서는 이 템플릿을 복사해 `docs/plans/<slug>.md`로 작성한다.
+예: `docs/plans/sprint-2-vote-separation.md`. 완료된 계획서는 상단에 `Status: Done — YYYY-MM-DD`를 적고 그 자리에 그대로 둔다.
+
 ---
 
 ## 1. Request
