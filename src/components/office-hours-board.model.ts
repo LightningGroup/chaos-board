@@ -206,3 +206,81 @@ export function getOppositeSide(side: Side) {
 
   return "blue";
 }
+
+export type Vote = {
+  side: Side;
+};
+
+export type VoteCounts = {
+  blue: number;
+  red: number;
+  total: number;
+};
+
+const INITIAL_VOTE_COUNT = 0;
+const SINGLE_VOTE_WEIGHT = 1;
+const NO_VOTE_WEIGHT = 0;
+const PERCENT_PRECISION_FACTOR = 1000;
+const PERCENT_PRECISION_DIVISOR = 10;
+const TOTAL_PERCENT = 100;
+
+/** 단일 투표 객체를 만든다. 상단 카드의 원탭 투표에서 사용한다. */
+export function createVote(side: Side): Vote {
+  return { side };
+}
+
+/** 현재 투표와 다음 탭 side를 받아 다음 투표 상태를 계산한다. 같은 side 재탭이면 null(취소), 다르면 새 투표. */
+export function applyVote(current: Vote | null, nextSide: Side): Vote | null {
+  if (current?.side === nextSide) {
+    return null;
+  }
+
+  return createVote(nextSide);
+}
+
+/** 초기 투표 집계. 백필 정책 B에 따라 0/0에서 시작한다. */
+export function createInitialVoteCounts(): VoteCounts {
+  return {
+    blue: INITIAL_VOTE_COUNT,
+    red: INITIAL_VOTE_COUNT,
+    total: INITIAL_VOTE_COUNT,
+  };
+}
+
+function getSideDelta(previousVote: Vote | null, nextVote: Vote | null, side: Side) {
+  const previousMatch = previousVote?.side === side ? SINGLE_VOTE_WEIGHT : NO_VOTE_WEIGHT;
+  const nextMatch = nextVote?.side === side ? SINGLE_VOTE_WEIGHT : NO_VOTE_WEIGHT;
+
+  return nextMatch - previousMatch;
+}
+
+/** 이전 투표와 다음 투표 상태를 받아 집계를 갱신한다. 단일 경로 전이 + 음수 clamp로 호출 전제가 깨져도 불변을 지킨다. */
+export function applyVoteCounts(
+  counts: VoteCounts,
+  previousVote: Vote | null,
+  nextVote: Vote | null,
+): VoteCounts {
+  const blueDelta = getSideDelta(previousVote, nextVote, "blue");
+  const redDelta = getSideDelta(previousVote, nextVote, "red");
+
+  const nextBlue = Math.max(INITIAL_VOTE_COUNT, counts.blue + blueDelta);
+  const nextRed = Math.max(INITIAL_VOTE_COUNT, counts.red + redDelta);
+
+  return {
+    blue: nextBlue,
+    red: nextRed,
+    total: nextBlue + nextRed,
+  };
+}
+
+/** 투표 집계에서 찬반 비율(소수 1자리)을 계산한다. 투표 0건이면 둘 다 0. 합은 100을 보장(rounding invariant). */
+export function getVoteRatio(counts: VoteCounts) {
+  if (!counts.total) {
+    return { bluePercent: INITIAL_VOTE_COUNT, redPercent: INITIAL_VOTE_COUNT };
+  }
+
+  const bluePercent = Math.round((counts.blue / counts.total) * PERCENT_PRECISION_FACTOR) / PERCENT_PRECISION_DIVISOR;
+  const redPercent = TOTAL_PERCENT - bluePercent;
+
+  return { bluePercent, redPercent };
+}

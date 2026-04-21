@@ -5,15 +5,20 @@ import { FormEvent, useEffect, useEffectEvent, useLayoutEffect, useRef, useState
 import {
   appendMessage,
   appendMessages,
+  applyVote,
+  applyVoteCounts,
   ChatMessage,
   createIncomingMessage,
+  createInitialVoteCounts,
   createMessage,
-  getMessagesBySide,
   getMostLikedMessage,
   getOppositeSide,
+  getVoteRatio,
   initialMessages,
   Side,
   toggleMessageLike,
+  Vote,
+  VoteCounts,
 } from "@/components/office-hours-board.model";
 
 const INCOMING_MESSAGE_INTERVAL_MS = 4500;
@@ -21,6 +26,9 @@ const REPLY_DELAY_MS = 1400;
 const FEED_LAYOUT_CLASS = "min-h-0 flex-1 md:h-[520px] md:flex-none";
 const EMPTY_AUTHOR_TOKEN = "?";
 const ZERO_COUNT = 0;
+const SIMULATED_TRAFFIC_FLAG_ON = "on";
+const SIMULATED_TRAFFIC_ENABLED =
+  process.env.NEXT_PUBLIC_SIMULATED_TRAFFIC === SIMULATED_TRAFFIC_FLAG_ON;
 
 const sideMeta: Record<
   Side,
@@ -62,14 +70,6 @@ const sideMeta: Record<
     actionBackground: "bg-[#ff4d3d] hover:bg-[#ff6a5b]",
   },
 };
-
-function getMessagePercent(messageCount: number, totalMessageCount: number) {
-  if (!totalMessageCount) {
-    return ZERO_COUNT;
-  }
-
-  return Math.round((messageCount / totalMessageCount) * 1000) / 10;
-}
 
 function getAuthorToken(author: string) {
   const nextToken = author.trim().slice(0, 1);
@@ -152,64 +152,81 @@ function getLikeButtonClass({
   return "border border-black/8 bg-white text-slate-600 hover:bg-slate-50";
 }
 
-function DebateOverviewCard({
-  blueCount,
-  bluePercent,
-  redCount,
-  redPercent,
-  selectedSide,
-  onSelect,
+function getVoteButtonAriaLabel({
+  side,
+  isVoted,
+  percent,
 }: {
-  blueCount: number;
+  side: Side;
+  isVoted: boolean;
+  percent: number;
+}) {
+  const label = side === "blue" ? "찬성" : "반대";
+  const action = isVoted ? "투표 취소" : "투표";
+
+  return `${label} ${action}, 현재 ${Math.round(percent)}%`;
+}
+
+function DebateOverviewCard({
+  voteCounts,
+  bluePercent,
+  redPercent,
+  votedSide,
+  onVote,
+}: {
+  voteCounts: VoteCounts;
   bluePercent: number;
-  redCount: number;
   redPercent: number;
-  selectedSide: Side;
-  onSelect: (side: Side) => void;
+  votedSide: Side | null;
+  onVote: (side: Side) => void;
 }) {
   return (
     <article
-      aria-label="찬성 반대 선택과 현재 참여 비율"
+      aria-label="찬성 반대 투표와 현재 투표 비율"
       className="overflow-hidden border border-slate-200 bg-white text-slate-950 xl:flex xl:h-full xl:flex-col"
     >
       <div className="grid gap-1 p-1.5 sm:gap-2 sm:p-2 md:p-2 xl:min-h-0 xl:flex-1">
         <button
           type="button"
-          aria-pressed={selectedSide === "blue"}
-          aria-label={`찬성 선택, 현재 ${bluePercent}%`}
-          onClick={() => onSelect("blue")}
+          aria-pressed={votedSide === "blue"}
+          aria-label={getVoteButtonAriaLabel({ side: "blue", isVoted: votedSide === "blue", percent: bluePercent })}
+          onClick={() => onVote("blue")}
           className={`relative flex items-center justify-between border px-2.5 py-2 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 md:min-h-[100px] md:px-4 md:py-4 ${getOverviewButtonClass({
             side: "blue",
           })}`}
         >
-          <div className="flex flex-col">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-blue-700 md:text-xs md:tracking-[0.24em]">찬성</p>
+          <div className="flex min-w-0 flex-col">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-blue-700 md:text-xs md:tracking-[0.24em]">
+              {votedSide === "blue" ? "찬성 · 내 투표" : "찬성"}
+            </p>
             <p className="mt-0 text-[1rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">지금 시작</p>
-            <p className="mt-0 hidden text-slate-600 md:mt-3 md:block md:text-sm">집중 근무, 채용 경쟁력, 번아웃 완화</p>
+            <p className="mt-1 line-clamp-1 text-[11px] text-slate-600 md:mt-3 md:line-clamp-none md:text-sm">집중 근무, 채용 경쟁력, 번아웃 완화</p>
           </div>
           <div className="flex flex-col items-end">
             <p className="text-[1.125rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{bluePercent}%</p>
-            <p className="mt-0 text-[11px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {blueCount}개</p>
+            <p className="mt-0 text-[11px] font-medium text-slate-500 md:mt-1 md:text-xs">{voteCounts.blue}표</p>
           </div>
         </button>
 
         <button
           type="button"
-          aria-pressed={selectedSide === "red"}
-          aria-label={`반대 선택, 현재 ${redPercent}%`}
-          onClick={() => onSelect("red")}
+          aria-pressed={votedSide === "red"}
+          aria-label={getVoteButtonAriaLabel({ side: "red", isVoted: votedSide === "red", percent: redPercent })}
+          onClick={() => onVote("red")}
           className={`relative flex items-center justify-between border px-2.5 py-2 text-left transition-[box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 md:min-h-[100px] md:px-4 md:py-4 ${getOverviewButtonClass({
             side: "red",
           })}`}
         >
-          <div className="flex flex-col">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-red-700 md:text-xs md:tracking-[0.24em]">반대</p>
+          <div className="flex min-w-0 flex-col">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-red-700 md:text-xs md:tracking-[0.24em]">
+              {votedSide === "red" ? "반대 · 내 투표" : "반대"}
+            </p>
             <p className="mt-0 text-[1rem] font-black tracking-tight text-slate-950 md:mt-2 md:text-[1.6rem] lg:text-[1.9rem]">조정이 먼저</p>
-            <p className="mt-0 hidden text-slate-600 md:mt-3 md:block md:text-sm">운영 공백, 인건비 부담, 서비스 품질 저하</p>
+            <p className="mt-1 line-clamp-1 text-[11px] text-slate-600 md:mt-3 md:line-clamp-none md:text-sm">운영 공백, 인건비 부담, 서비스 품질 저하</p>
           </div>
           <div className="flex flex-col items-end">
             <p className="text-[1.125rem] font-black tracking-tight text-slate-950 md:text-[1.95rem] lg:text-[2.2rem]">{redPercent}%</p>
-            <p className="mt-0 text-[11px] font-medium text-slate-500 md:mt-1 md:text-xs">댓글 {redCount}개</p>
+            <p className="mt-0 text-[11px] font-medium text-slate-500 md:mt-1 md:text-xs">{voteCounts.red}표</p>
           </div>
         </button>
       </div>
@@ -279,8 +296,21 @@ function MessageCard({
   );
 }
 
+type VoteState = {
+  myVote: Vote | null;
+  counts: VoteCounts;
+};
+
+function createInitialVoteState(): VoteState {
+  return {
+    myVote: null,
+    counts: createInitialVoteCounts(),
+  };
+}
+
 export default function OfficeHoursBoard() {
-  const [selectedSide, setSelectedSide] = useState<Side>("blue");
+  const [composerSide, setComposerSide] = useState<Side>("blue");
+  const [voteState, setVoteState] = useState<VoteState>(createInitialVoteState);
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [queuedMessages, setQueuedMessages] = useState<ChatMessage[]>([]);
@@ -289,17 +319,16 @@ export default function OfficeHoursBoard() {
   const pendingScrollBehaviorRef = useRef<ScrollBehavior | null>(null);
   const replyTimeoutIdsRef = useRef<number[]>([]);
 
+  const { myVote, counts: voteCounts } = voteState;
   const liveMessages = [...messages, ...queuedMessages];
-  const liveBlueMessages = getMessagesBySide(liveMessages, "blue");
-  const liveRedMessages = getMessagesBySide(liveMessages, "red");
   const bestMessage = getMostLikedMessage(messages);
   const feedMessages = [...messages].reverse();
-  const blueCount = liveBlueMessages.length;
-  const redCount = liveRedMessages.length;
-  const totalCount = liveMessages.length;
+  const commentCount = liveMessages.length;
   const queuedMessageCount = queuedMessages.length;
-  const bluePercent = getMessagePercent(blueCount, totalCount);
-  const redPercent = getMessagePercent(redCount, totalCount);
+  const voteRatio = getVoteRatio(voteCounts);
+  const bluePercent = voteRatio.bluePercent;
+  const redPercent = voteRatio.redPercent;
+  const votedSide = myVote?.side ?? null;
 
   useLayoutEffect(() => {
     const nextBehavior = pendingScrollBehaviorRef.current;
@@ -317,6 +346,10 @@ export default function OfficeHoursBoard() {
   });
 
   useEffect(() => {
+    if (!SIMULATED_TRAFFIC_ENABLED) {
+      return;
+    }
+
     const intervalId = window.setInterval(() => {
       const nextSide = Math.random() > 0.5 ? "blue" : "red";
 
@@ -348,6 +381,23 @@ export default function OfficeHoursBoard() {
     setMessages((current) => toggleMessageLike(current, messageId));
   }
 
+  function handleVote(side: Side) {
+    const isUndo = myVote?.side === side;
+
+    setVoteState((current) => {
+      const nextVote = applyVote(current.myVote, side);
+      const nextCounts = applyVoteCounts(current.counts, current.myVote, nextVote);
+
+      return { myVote: nextVote, counts: nextCounts };
+    });
+
+    if (isUndo) {
+      return;
+    }
+
+    setComposerSide(side);
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -357,7 +407,7 @@ export default function OfficeHoursBoard() {
       return;
     }
 
-    const nextSide = selectedSide;
+    const nextSide = composerSide;
 
     setDraft("");
     pendingScrollBehaviorRef.current = "smooth";
@@ -376,6 +426,10 @@ export default function OfficeHoursBoard() {
       );
     });
 
+    if (!SIMULATED_TRAFFIC_ENABLED) {
+      return;
+    }
+
     const replyTimeoutId = window.setTimeout(() => {
       const replySide = getOppositeSide(nextSide);
 
@@ -390,7 +444,11 @@ export default function OfficeHoursBoard() {
     <main className="flex h-[100dvh] flex-col md:block md:h-auto md:min-h-screen md:px-5 md:py-4 lg:px-6">
       <div className="mx-auto flex w-full max-w-[1080px] flex-1 min-h-0 flex-col md:gap-4">
         <section className="relative overflow-hidden border-b border-white/80 bg-white/76 p-2 shadow-[0_24px_80px_rgba(15,23,42,0.12)] backdrop-blur-xl md:border md:p-4 lg:p-5">
-          <div className="absolute inset-x-0 top-0 flex h-1.5 overflow-hidden">
+          <div
+            role="img"
+            aria-label={`투표 기준 찬반 비율: 찬성 ${Math.round(bluePercent)}%, 반대 ${Math.round(redPercent)}%`}
+            className="absolute inset-x-0 top-0 flex h-1.5 overflow-hidden"
+          >
             <div className="motion-width bg-blue-500" style={{ width: `${bluePercent}%` }} />
             <div className="motion-width bg-red-500" style={{ width: `${redPercent}%` }} />
           </div>
@@ -398,26 +456,22 @@ export default function OfficeHoursBoard() {
           <div className="absolute -right-16 bottom-0 h-48 w-48 bg-[rgba(240,68,56,0.12)] blur-3xl" />
 
           <div className="relative flex flex-col gap-3">
-            <div className="flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
-              <div className="min-w-0">
-                <h1 className="break-keep text-[1.125rem] font-black leading-tight tracking-tight text-slate-950 sm:whitespace-nowrap sm:text-[2.1rem] sm:leading-normal xl:text-[3.35rem]">
-                  주 4일제 도입, 지금 시작해야 하는가?
-                </h1>
-              </div>
-
-              <div className="flex flex-nowrap items-center gap-2 overflow-x-auto text-[11px] font-semibold text-slate-400 md:text-xs lg:shrink-0">
-                <span className="shrink-0 whitespace-nowrap text-slate-500">참여 {totalCount}건</span>
-              </div>
+            <div className="flex flex-col gap-1.5">
+              <h1 className="break-keep text-[1.375rem] font-black leading-tight tracking-tight text-slate-950 sm:whitespace-nowrap sm:text-[2.1rem] sm:leading-normal xl:text-[3.35rem]">
+                주 4일제 도입, 지금 시작해야 하는가?
+              </h1>
+              <p className="text-[11px] font-medium text-slate-500 md:text-xs">
+                투표 {voteCounts.total}표 · 댓글 {commentCount}개
+              </p>
             </div>
 
             <div className="grid gap-2">
               <DebateOverviewCard
-                blueCount={blueCount}
+                voteCounts={voteCounts}
                 bluePercent={bluePercent}
-                redCount={redCount}
                 redPercent={redPercent}
-                selectedSide={selectedSide}
-                onSelect={setSelectedSide}
+                votedSide={votedSide}
+                onVote={handleVote}
               />
             </div>
           </div>
@@ -453,44 +507,42 @@ export default function OfficeHoursBoard() {
         </section>
 
         <form onSubmit={handleSubmit} className="bg-slate-950 p-2 text-white shadow-[0_24px_60px_rgba(15,23,42,0.18)] md:p-4">
-          <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
-            <div className="text-[11px] font-medium leading-4 text-slate-400 sm:shrink-0 md:text-[12px] md:leading-5">
-              작성할 때만 입장을 고르고, 피드에서는 댓글을 한 번에 보여줍니다.
-            </div>
-
-            <div className="flex flex-wrap gap-1.5">
+          <div className="flex items-center gap-1.5 text-[11px]">
+            <span className="shrink-0 text-slate-400">작성 입장</span>
+            <div className="flex gap-1">
               {(["blue", "red"] as const).map((side) => {
                 const meta = sideMeta[side];
-                const isActive = selectedSide === side;
+                const isActive = composerSide === side;
                 const activeClass = isActive ? `${meta.chipBackground} ${meta.chipText}` : "border border-white/15 bg-white/5 text-slate-300 hover:bg-white/10";
 
                 return (
                   <button
                     key={side}
                     type="button"
-                    onClick={() => setSelectedSide(side)}
-                    className={`flex-1 min-w-[72px] whitespace-nowrap px-3 py-2 text-[12px] font-semibold transition-[transform,background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 active:scale-[0.98] sm:flex-none sm:px-3 sm:py-2 sm:text-xs md:text-sm ${activeClass}`}
+                    aria-pressed={isActive}
+                    onClick={() => setComposerSide(side)}
+                    className={`whitespace-nowrap px-2 py-1 text-[11px] font-semibold transition-[background-color,color,box-shadow] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] md:px-2.5 ${activeClass}`}
                   >
-                    {meta.label}으로 작성
+                    {meta.label}
                   </button>
                 );
               })}
             </div>
           </div>
 
-          <div className="mt-1.5 flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-2 md:mt-2">
+          <div className="mt-1.5 flex flex-row items-center gap-1.5 md:mt-2 md:gap-2">
             <input
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
-              placeholder={`${sideMeta[selectedSide].label} 입장에서 의견을 남겨보세요.`}
-              className="h-11 w-full flex-1 border border-white/10 bg-white/7 px-3.5 py-1.5 text-[16px] text-white outline-none ring-0 placeholder:text-slate-500 focus:border-white/30 sm:h-10 sm:px-4 sm:py-0 md:h-12 md:text-[14px]"
+              placeholder={`${sideMeta[composerSide].label} 입장에서 한 줄 남기기`}
+              className="h-11 min-w-0 flex-1 border border-white/10 bg-white/7 px-3.5 py-1.5 text-[16px] text-white outline-none ring-0 placeholder:text-slate-500 focus:border-white/30 sm:h-10 sm:px-4 sm:py-0 md:h-12 md:text-[14px]"
             />
             <button
               type="submit"
               disabled={isPending || draft.trim().length === 0}
-              className={`h-11 sm:h-10 w-full px-3.5 text-[13px] font-bold text-white transition-[transform,background-color,box-shadow,opacity] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(37,99,235,0.32)] active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-4 sm:text-[13px] md:h-12 md:text-[14px] ${sideMeta[selectedSide].actionBackground}`}
+              className={`h-11 shrink-0 px-3.5 text-[13px] font-bold text-white transition-[transform,background-color,box-shadow,opacity] duration-[var(--motion-fast)] ease-[var(--ease-smooth)] hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(37,99,235,0.32)] active:scale-[0.985] disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:px-4 sm:text-[13px] md:h-12 md:text-[14px] ${sideMeta[composerSide].actionBackground}`}
             >
-              의견 보내기
+              보내기
             </button>
           </div>
         </form>
