@@ -19,7 +19,7 @@ import {
   toggleMessageLike,
   Vote,
   VoteCounts,
-} from "@/components/office-hours-board.model";
+} from "@/components/board.model";
 
 const INCOMING_MESSAGE_INTERVAL_MS = 4500;
 const REPLY_DELAY_MS = 1400;

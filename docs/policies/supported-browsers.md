@@ -61,7 +61,7 @@
 ## 3. 지원 범위에 대한 전제
 
 - 이 앱은 클라이언트 사이드 상태(React state + 커스텀 훅) 기반이며 서버 영속화 의존이 없다. 따라서 네트워크 불안정 시에도 핵심 플로우(투표/댓글)는 로컬에서 성립한다.
-- 현재 앱은 네트워크 호출과 `localStorage` 사용이 없다. 타이머(`window.setInterval`, `window.setTimeout`)는 `src/components/office-hours-board.tsx` 내부에서 직접 호출된다. 브라우저별 타이머/스토리지 이슈는 먼저 해당 파일을 확인한다. (향후 네트워크/스토리지가 도입되면 `src/AGENTS.md` §3/§5 원칙에 따라 경계 계층으로 분리한다.)
+- 현재 앱은 네트워크 호출과 `localStorage` 사용이 없다. 타이머(`window.setInterval`, `window.setTimeout`)는 `src/components/board.tsx` 내부에서 직접 호출된다. 브라우저별 타이머/스토리지 이슈는 먼저 해당 파일을 확인한다. (향후 네트워크/스토리지가 도입되면 `src/AGENTS.md` §3/§5 원칙에 따라 경계 계층으로 분리한다.)
 - CSS는 Tailwind와 소수의 커스텀 키프레임(`src/app/globals.css`)만 사용한다. `prefers-reduced-motion: reduce`가 설정된 환경에서는 애니메이션이 사실상 비활성화된다.
 
 ---
@@ -74,13 +74,13 @@
   `src/app/globals.css` body font-family는 `"SUIT Variable" → "Pretendard Variable" → "Apple SD Gothic Neo" → "Noto Sans KR" → system-ui → sans-serif` 체인이며, 웹폰트를 import하지 않는다. 결과적으로 macOS(Apple SD Gothic Neo), iOS(SUIT/Pretendard 미설치 시 Apple SD Gothic Neo), Windows(대부분 system-ui로 폴백), Android(Noto Sans KR 또는 system-ui)에서 글자 무게와 자간이 눈에 띄게 달라질 수 있다. **특히 Windows Chrome/Edge에서 SUIT/Pretendard가 OS 기본으로 없어 얇아 보일 수 있다.** 웹폰트 도입 여부는 §5 재논의 트리거로 관리한다.
 
 - **CB-215 — `motion-width` transition의 reflow 비용**
-  `src/app/globals.css`의 `.motion-width`는 `width` 속성에 transition을 걸고 있으며, 이는 투표 비율 게이지(`src/components/office-hours-board.tsx`의 상단 그라디언트 바)에 적용된다. `width` 전환은 레이아웃 단계를 거치므로 저사양/모바일에서 프레임이 튈 수 있다. 현재 차단 이슈는 아니며 시각 best-effort 범위다.
+  `src/app/globals.css`의 `.motion-width`는 `width` 속성에 transition을 걸고 있으며, 이는 투표 비율 게이지(`src/components/board.tsx`의 상단 그라디언트 바)에 적용된다. `width` 전환은 레이아웃 단계를 거치므로 저사양/모바일에서 프레임이 튈 수 있다. 현재 차단 이슈는 아니며 시각 best-effort 범위다.
 
 - **CB-216 — `100dvh` 미지원 구버전 Safari**
-  `src/components/office-hours-board.tsx` 모바일 경로에서 `h-[100dvh]`를, `src/app/globals.css` body에서 `min-height: 100dvh`를 사용한다. **`100vh` 폴백은 두고 있지 않다.** iOS Safari 15.4 미만 등 구버전에서는 `dvh` 단위를 인식하지 못해 **해당 선언 전체가 무효화**되고, 속성이 초기값(`min-height: auto`, `height: auto`)으로 떨어진다. 결과적으로 뷰포트 높이가 아닌 컨텐츠 높이로 레이아웃이 잡혀 모바일에서 상단/하단 여백과 입력 바 고정 위치가 깨질 수 있다. 데스크탑 경로는 `md:min-h-screen`(=`100vh`)를 병기하므로 영향이 없다. 최근 버전 범위에서는 문제없다.
+  `src/components/board.tsx` 모바일 경로에서 `h-[100dvh]`를, `src/app/globals.css` body에서 `min-height: 100dvh`를 사용한다. **`100vh` 폴백은 두고 있지 않다.** iOS Safari 15.4 미만 등 구버전에서는 `dvh` 단위를 인식하지 못해 **해당 선언 전체가 무효화**되고, 속성이 초기값(`min-height: auto`, `height: auto`)으로 떨어진다. 결과적으로 뷰포트 높이가 아닌 컨텐츠 높이로 레이아웃이 잡혀 모바일에서 상단/하단 여백과 입력 바 고정 위치가 깨질 수 있다. 데스크탑 경로는 `md:min-h-screen`(=`100vh`)를 병기하므로 영향이 없다. 최근 버전 범위에서는 문제없다.
 
 - **CB-217 — `break-keep` 한글 줄바꿈 엔진별 차이**
-  `src/components/office-hours-board.tsx`의 제목과 댓글 본문에서 `break-keep`을 사용한다. `word-break: keep-all`의 해석은 엔진별로 경계 케이스가 달라, 긴 한글 어절이 많은 댓글에서 줄바꿈 위치가 브라우저마다 다를 수 있다. 콘텐츠 유실은 없다.
+  `src/components/board.tsx`의 제목과 댓글 본문에서 `break-keep`을 사용한다. `word-break: keep-all`의 해석은 엔진별로 경계 케이스가 달라, 긴 한글 어절이 많은 댓글에서 줄바꿈 위치가 브라우저마다 다를 수 있다. 콘텐츠 유실은 없다.
 
 - **CB-218 — 임의값 타이포(`text-[10px]`, `text-[11px]`) 서브픽셀 편차**
   카드 배지, 타임스탬프, 칩, 업카운트 등에 `text-[10px]`, `text-[11px]`을 광범위하게 사용한다(약 10곳). 서브픽셀 렌더링이 엔진별로 달라 굵기/여백 체감이 달라질 수 있다. 가독성 결함 수준은 아니나 스크린샷 기준 동일성은 보장되지 않는다.
@@ -92,7 +92,7 @@
   `src/app/globals.css`의 `::selection` 커스터마이징은 Blink/WebKit/Gecko 간 렌더링이 살짝 다르다. 텍스트 선택은 모든 지원 브라우저에서 동작하지만 배경 투명도와 텍스트 색 조합 체감이 다를 수 있다.
 
 - **CB-221 — `backdrop-blur-xl` + gradient orb 합성 비용 (Safari)**
-  상단/피드 섹션은 `backdrop-blur-xl`을 쓰며, 같은 영역에 `radial-gradient` 배경과 절대 위치 `blur-3xl` orb가 겹쳐 있다(`src/components/office-hours-board.tsx` 446~456 라인 근처). Safari는 backdrop-filter 합성 비용이 상대적으로 크므로 저사양 기기에서 스크롤 프레임이 떨어질 수 있다. **검증 필요** — 실기기 계측 없이 확신하기 어렵다.
+  상단/피드 섹션은 `backdrop-blur-xl`을 쓰며, 같은 영역에 `radial-gradient` 배경과 절대 위치 `blur-3xl` orb가 겹쳐 있다(`src/components/board.tsx` 446~456 라인 근처). Safari는 backdrop-filter 합성 비용이 상대적으로 크므로 저사양 기기에서 스크롤 프레임이 떨어질 수 있다. **검증 필요** — 실기기 계측 없이 확신하기 어렵다.
 
 - **CB-222 — 미사용 애니메이션 규칙 `.motion-stat-swap`**
   `src/app/globals.css`에 `filter: blur(4px) → blur(0)` 키프레임(`stat-swap`)과 `.motion-stat-swap` 유틸이 정의되어 있으나 현재 컴포넌트 트리에서 참조되지 않는다. 사용 시 Safari의 `filter: blur` 가속 경로 차이로 인한 플리커가 관찰될 수 있다. 지금은 시각 best-effort 범위가 아니라 "장차 되살릴 때 유의할 것" 메모다.
