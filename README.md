@@ -30,3 +30,7 @@ npm start
 - React 18
 - TypeScript
 - Tailwind CSS
+
+## 지원 브라우저
+
+Chaos Board는 최근 버전의 Chrome, Edge, Safari, iOS Safari, Android Chrome에서 정상 동작하도록 만들어졌습니다. 상세 정책과 알려진 차이, 수동 확인 체크리스트는 [`docs/policies/supported-browsers.md`](./docs/policies/supported-browsers.md)를 참조하세요.

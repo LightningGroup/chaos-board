@@ -1,4 +1,4 @@
-import OfficeHoursBoard from "@/components/office-hours-board";
+import OfficeHoursBoard from "@/components/board";
 
 export default function Home() {
   return <OfficeHoursBoard />;

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import OfficeHoursBoard from "@/components/office-hours-board";
+import OfficeHoursBoard from "@/components/board";
 
 export const metadata: Metadata = {
   title: "Office Hours | Chaos Board",
